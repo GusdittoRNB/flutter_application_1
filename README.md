@@ -3,7 +3,7 @@ Membuat halaman landing page, login, register, dan home sederhana menggunakan fl
 
 Untuk gambar di landing page menggunakan gambar dari figma, kemudian untuk kesuluruhan font menggunakan font poppins
 
-forgot password, login with google/facebook/apple, search, dan profil belum berisi fungsi
+forgot password, login with google/facebook/apple, dan search, belum berisi fungsi, tapi profil yang menampilkan user detail sudah bisa
 
 Berikut adalah tampilannya
 
