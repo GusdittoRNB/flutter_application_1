@@ -8,6 +8,13 @@ class HomePage extends StatelessWidget {
     {'nama': 'Danu Daksawan', 'telp': '135792468', 'alamat': 'Jalan raya danau poso'},
   ];
 
+  final _dio = Dio();
+  final _storage = GetStorage();
+  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,15 +25,6 @@ class HomePage extends StatelessWidget {
             fontSize: 20,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // Implement action when profile icon is pressed
-            },
-            icon: Icon(Icons.account_circle),
-            iconSize: 32,
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: defaultMargin),
@@ -117,6 +115,110 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+      endDrawer: NavigationDrawer(
+        children:  [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text(
+                      'Home',
+                      style: blackTextStyle,
+                    ),
+                    onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/home');
+                  },
+                  ),
+                  Divider(
+                    thickness: 2,
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.account_circle),
+                    title: Text(
+                      'Profile',
+                      style: blackTextStyle,
+                    ),
+                    onTap: () {
+                      goUser();
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text(
+                      'Home',
+                      style: blackTextStyle,
+                    ),
+                  ),
+                  Divider(
+                    thickness: 2,
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.login),
+                    title: Text(
+                      'Logout',
+                      style: blackTextStyle,
+                    ),
+                    onTap: () {
+                      goLogout(context);
+                    },
+                  ),
+                ],
+              )
+            ],
+          )
+        ]
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            label: 'Home',
+            icon: Icon(Icons.home),
+            
+          ),
+          BottomNavigationBarItem(
+            label: 'Profile',
+            icon: Icon(Icons.account_circle),
+          ),
+          BottomNavigationBarItem(
+            label: 'Settings',
+            icon: Icon(Icons.settings),
+          ),
+        ],
+      ),
     );
+  } 
+
+  void goUser() async{
+    try{
+      final _response = await _dio.get(
+        '${_apiUrl}/user',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+      print(_response.data);
+    } on DioException catch (e) {
+      print('${e.response} - ${e.response?.statusCode}');
+    }
   }
+
+  void goLogout(BuildContext context) async{
+    try{
+      final _response = await _dio.get(
+        '${_apiUrl}/logout',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+      print(_response.data);
+      Navigator.pushReplacementNamed(context, '/');
+    } on DioException catch (e) {
+      print('${e.response} - ${e.response?.statusCode}');
+    }
+  }
+
 }

@@ -7,12 +7,13 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryColor,
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: defaultMargin),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 40),
               Image.asset(
                 'assets/images/welcome-image.png',
                 height: 400,
@@ -20,13 +21,13 @@ class WelcomePage extends StatelessWidget {
               ),
               SizedBox(height: 15),
               Text(
-                "Discover Your Dream Job Here",
+                "Build Your Future with Us",
                 style: secondaryTextStyle,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 15),
               Text(
-                "Explore all the existing job roles based on your interest and study major",
+                "We provide a platform that makes it easy for you to manage your loans and savings",
                 style: blackTextStyle,
                 textAlign: TextAlign.center,
               ),
@@ -39,10 +40,7 @@ class WelcomePage extends StatelessWidget {
                     width: MediaQuery.of(context).size.width / 2.5,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
+                        Navigator.pushNamed(context, '/login');
                       },
                       child: Text(
                         'Login',
@@ -64,11 +62,7 @@ class WelcomePage extends StatelessWidget {
                     width: MediaQuery.of(context).size.width / 2.5,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegistrationPage()),
-                        );
+                        Navigator.pushNamed(context, '/register');
                       },
                       child: Text(
                         'Register',

@@ -8,6 +8,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _isHidden = true;
 
+  final _dio = Dio();
+  final _storage = GetStorage();
+  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: defaultMargin),
           child: Column(
@@ -44,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 50.0),
               TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                     labelText: 'Email',
                     filled: true,
@@ -60,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 20.0),
               TextField(
+                controller: passwordController,
                 obscureText: _isHidden,
                 decoration: InputDecoration(
                     labelText: 'Password',
@@ -106,10 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
+                    goLogin();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: secondaryColor,
@@ -129,10 +135,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 40.0),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegistrationPage()),
-                  );
+                  Navigator.pushNamed(context, '/register');
                 },
                 child: Text(
                   'Create new account',
@@ -143,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              SizedBox(height: 106.0),
+              SizedBox(height: 110.0),
               Text(
                 'Or continue with',
                 style: secondaryTextStyle.copyWith(
@@ -185,4 +188,24 @@ class _LoginPageState extends State<LoginPage> {
       _isHidden = !_isHidden;
     });
   }
+
+  void goLogin() async{
+    try{
+      final _response = await _dio.post(
+        '${_apiUrl}/login',
+        data: {
+          'email': emailController.text,
+          'password': passwordController.text,
+        },
+      );
+      print(_response.data);
+      _storage.write('token', _response.data['data']['token']);
+      emailController.clear();
+      passwordController.clear();
+      Navigator.pushNamed(context, '/home');
+    } on DioException catch (e) {
+      print('${e.response} - ${e.response?.statusCode}');
+    }
+  }
+
 }
