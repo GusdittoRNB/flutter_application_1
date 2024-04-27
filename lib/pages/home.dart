@@ -2,18 +2,14 @@ part of 'pages.dart';
 
 class HomePage extends StatelessWidget {
   final List<Map<String, String>> dataList = [
-    {'nama': 'Alif Abas', 'telp': '123456789', 'alamat': 'Jalan raya angantaka'},
-    {'nama': 'Budi Bakrie', 'telp': '987654321', 'alamat': 'Jalan raya badung'},
-    {'nama': 'Calista Chris', 'telp': '246813579', 'alamat': 'Jalan raya ciungwanara'},
-    {'nama': 'Danu Daksawan', 'telp': '135792468', 'alamat': 'Jalan raya danau poso'},
+    {'id': '32', 'name': 'budi', 'email': 'budi@gmail.com'},
+    {'id': '33', 'name': 'cece', 'email': 'cece@gmail.com'},
+    {'id': '34', 'name': 'dede', 'email': 'dede@gmail.com'},
   ];
 
   final _dio = Dio();
   final _storage = GetStorage();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
-
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +21,15 @@ class HomePage extends StatelessWidget {
             fontSize: 20,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile');
+            },
+            icon: Icon(Icons.account_circle),
+            iconSize: 30,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: defaultMargin),
@@ -52,7 +57,7 @@ class HomePage extends StatelessWidget {
                 columns: <DataColumn>[
                   DataColumn(
                     label: Text(
-                      'Nama',
+                      'Id',
                       style: whiteTextStyle.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -61,7 +66,7 @@ class HomePage extends StatelessWidget {
                   ),
                   DataColumn(
                     label: Text(
-                      'Telp',
+                      'Name',
                       style: whiteTextStyle.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -70,7 +75,7 @@ class HomePage extends StatelessWidget {
                   ),
                   DataColumn(
                     label: Text(
-                      'Alamat',
+                      'Email',
                       style: whiteTextStyle.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -84,7 +89,7 @@ class HomePage extends StatelessWidget {
                     cells: [
                       DataCell(
                         Text(
-                          data['nama'] ?? '',
+                          data['id'] ?? '',
                           style: blackTextStyle.copyWith(
                             fontSize: 14,
                           ),
@@ -92,7 +97,7 @@ class HomePage extends StatelessWidget {
                       ),
                       DataCell(
                         Text(
-                          data['telp'] ?? '',
+                          data['name'] ?? '',
                           style: blackTextStyle.copyWith(
                             fontSize: 14,
                           ),
@@ -100,7 +105,7 @@ class HomePage extends StatelessWidget {
                       ),
                       DataCell(
                         Text(
-                          data['alamat'] ?? '',
+                          data['email'] ?? '',
                           style: blackTextStyle.copyWith(
                             fontSize: 14,
                           ),
@@ -115,7 +120,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      endDrawer: NavigationDrawer(
+      drawer: NavigationDrawer(
         children:  [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -129,12 +134,18 @@ class HomePage extends StatelessWidget {
                       style: blackTextStyle,
                     ),
                     onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, '/home');
+                    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                   },
                   ),
                   Divider(
                     thickness: 2,
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.wallet),
+                    title: Text(
+                      'Wallet',
+                      style: blackTextStyle,
+                    ),
                   ),
                   ListTile(
                     leading: Icon(Icons.account_circle),
@@ -143,13 +154,13 @@ class HomePage extends StatelessWidget {
                       style: blackTextStyle,
                     ),
                     onTap: () {
-                      goUser();
+                      Navigator.pushNamed(context, '/profile');
                     },
                   ),
                   ListTile(
                     leading: Icon(Icons.settings),
                     title: Text(
-                      'Home',
+                      'Settings',
                       style: blackTextStyle,
                     ),
                   ),
@@ -177,11 +188,10 @@ class HomePage extends StatelessWidget {
           BottomNavigationBarItem(
             label: 'Home',
             icon: Icon(Icons.home),
-            
           ),
           BottomNavigationBarItem(
-            label: 'Profile',
-            icon: Icon(Icons.account_circle),
+            label: 'Wallet',
+            icon: Icon(Icons.wallet),
           ),
           BottomNavigationBarItem(
             label: 'Settings',
@@ -192,20 +202,6 @@ class HomePage extends StatelessWidget {
     );
   } 
 
-  void goUser() async{
-    try{
-      final _response = await _dio.get(
-        '${_apiUrl}/user',
-        options: Options(
-          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
-        ),
-      );
-      print(_response.data);
-    } on DioException catch (e) {
-      print('${e.response} - ${e.response?.statusCode}');
-    }
-  }
-
   void goLogout(BuildContext context) async{
     try{
       final _response = await _dio.get(
@@ -215,9 +211,10 @@ class HomePage extends StatelessWidget {
         ),
       );
       print(_response.data);
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     }
   }
 

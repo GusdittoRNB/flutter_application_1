@@ -21,7 +21,7 @@ class WelcomePage extends StatelessWidget {
               ),
               SizedBox(height: 15),
               Text(
-                "Build Your Future with Us",
+                "Build Your Future with e-Silih",
                 style: secondaryTextStyle,
                 textAlign: TextAlign.center,
               ),

@@ -28,11 +28,10 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+          padding: EdgeInsets.all(defaultMargin),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: defaultMargin),
               Text(
                 "Login Here",
                 style: secondaryTextStyle.copyWith(
@@ -160,19 +159,19 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       // Handle Google sign up
                     },
-                    icon: Icon(Icons.language),
+                    icon: Icon(FontAwesomeIcons.google),
                   ),
                   IconButton(
                     onPressed: () {
                       // Handle Facebook sign up
                     },
-                    icon: Icon(Icons.facebook),
+                    icon: Icon(FontAwesomeIcons.facebook),
                   ),
                   IconButton(
                     onPressed: () {
                       // Handle Apple sign up
                     },
-                    icon: Icon(Icons.apple),
+                    icon: Icon(FontAwesomeIcons.apple),
                   ),
                 ],
               ),
@@ -200,11 +199,16 @@ class _LoginPageState extends State<LoginPage> {
       );
       print(_response.data);
       _storage.write('token', _response.data['data']['token']);
-      emailController.clear();
-      passwordController.clear();
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login failed. Please check your credentials.', textAlign: TextAlign.center,),
+          duration: Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating, 
+        ),
+      );
     }
   }
 

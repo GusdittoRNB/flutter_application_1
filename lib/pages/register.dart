@@ -31,11 +31,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+          padding: EdgeInsets.all(defaultMargin),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: defaultMargin),
               Text(
                 "Creat Account",
                 style: secondaryTextStyle.copyWith(
@@ -145,7 +144,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    goRegister(context);
+                    goRegister();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: secondaryColor,
@@ -190,19 +189,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     onPressed: () {
                       // Handle Google sign up
                     },
-                    icon: Icon(Icons.language),
+                    icon: Icon(FontAwesomeIcons.google),
                   ),
                   IconButton(
                     onPressed: () {
                       // Handle Facebook sign up
                     },
-                    icon: Icon(Icons.facebook),
+                    icon: Icon(FontAwesomeIcons.facebook),
                   ),
                   IconButton(
                     onPressed: () {
                       // Handle Apple sign up
                     },
-                    icon: Icon(Icons.apple),
+                    icon: Icon(FontAwesomeIcons.apple),
                   ),
                 ],
               ),
@@ -225,7 +224,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
-  void goRegister(BuildContext context) async {
+  void goRegister() async {
     try {
       final _response = await _dio.post(
         '${_apiUrl}/register',
@@ -236,7 +235,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         },
       );
       print(_response.data);
-      _storage.write('token', _response.data['data']['token']);
+      _storage.write('data', _response.data['data']);
       nameController.clear();
       emailController.clear();
       passwordController.clear();
@@ -244,6 +243,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
       Navigator.pushNamed(context, '/login');
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Register failed. Please check your credentials.', textAlign: TextAlign.center,),
+          duration: Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating, 
+        ),
+      );
     }
   }
+
 }
