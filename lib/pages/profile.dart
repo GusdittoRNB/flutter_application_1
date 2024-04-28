@@ -117,6 +117,13 @@ class _ProfilePageState extends State<ProfilePage> {
       } else {
         // Respons gagal
         print('Failed to load user data: ${_response.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load user data', textAlign: TextAlign.center,),
+            duration: Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating, 
+          ),
+        );
       }
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');

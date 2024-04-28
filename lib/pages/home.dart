@@ -184,6 +184,7 @@ class HomePage extends StatelessWidget {
         ]
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
             label: 'Home',
@@ -192,6 +193,14 @@ class HomePage extends StatelessWidget {
           BottomNavigationBarItem(
             label: 'Wallet',
             icon: Icon(Icons.wallet),
+          ),
+          BottomNavigationBarItem(
+            label: 'Pay',
+            icon: Icon(Icons.attach_money_sharp),
+          ),
+          BottomNavigationBarItem(
+            label: 'Activty',
+            icon: Icon(Icons.local_activity),
           ),
           BottomNavigationBarItem(
             label: 'Settings',
