@@ -1,11 +1,6 @@
 part of 'pages.dart';
 
 class HomePage extends StatelessWidget {
-  final List<Map<String, String>> dataList = [
-    {'id': '32', 'name': 'budi', 'email': 'budi@gmail.com'},
-    {'id': '33', 'name': 'cece', 'email': 'cece@gmail.com'},
-    {'id': '34', 'name': 'dede', 'email': 'dede@gmail.com'},
-  ];
 
   final _dio = Dio();
   final _storage = GetStorage();
@@ -31,95 +26,6 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: defaultMargin),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Search...',
-                prefixIcon: Icon(Icons.search),
-              ),
-              onChanged: (value) {
-                // Implement search functionality
-              },
-              style: blackTextStyle.copyWith(
-                fontSize: 15,
-              ),
-            ),
-            SizedBox(height: 20),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                headingRowColor:
-                    MaterialStateColor.resolveWith((states) => secondaryColor),
-                columns: <DataColumn>[
-                  DataColumn(
-                    label: Text(
-                      'Id',
-                      style: whiteTextStyle.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Name',
-                      style: whiteTextStyle.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Email',
-                      style: whiteTextStyle.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-                rows: dataList.map(
-                  (data) => DataRow(
-                    color: MaterialStateColor.resolveWith((states) => primaryColor),
-                    cells: [
-                      DataCell(
-                        Text(
-                          data['id'] ?? '',
-                          style: blackTextStyle.copyWith(
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Text(
-                          data['name'] ?? '',
-                          style: blackTextStyle.copyWith(
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Text(
-                          data['email'] ?? '',
-                          style: blackTextStyle.copyWith(
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-                .toList(),
-              ),
-            ),
-          ],
-        ),
-      ),
       drawer: NavigationDrawer(
         children:  [
           Column(
@@ -141,13 +47,6 @@ class HomePage extends StatelessWidget {
                     thickness: 2,
                   ),
                   ListTile(
-                    leading: Icon(Icons.wallet),
-                    title: Text(
-                      'Wallet',
-                      style: blackTextStyle,
-                    ),
-                  ),
-                  ListTile(
                     leading: Icon(Icons.account_circle),
                     title: Text(
                       'Profile',
@@ -155,6 +54,23 @@ class HomePage extends StatelessWidget {
                     ),
                     onTap: () {
                       Navigator.pushNamed(context, '/profile');
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.wallet),
+                    title: Text(
+                      'Wallet',
+                      style: blackTextStyle,
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text(
+                      'Member',
+                      style: blackTextStyle,
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/member');
                     },
                   ),
                   ListTile(
@@ -196,15 +112,25 @@ class HomePage extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             label: 'Pay',
-            icon: Icon(Icons.attach_money_sharp),
+            icon: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: secondaryColor, // Warna latar belakang
+              ),
+              padding: EdgeInsets.all(
+                  10), // Padding agar ikon tidak terlalu dekat dengan tepi latar belakang
+              child: Icon(Icons.attach_money_sharp,
+                  size: 30,
+                  color: primaryColor), // Ikon yang ditempatkan di dalam latar belakang
+            ),
           ),
           BottomNavigationBarItem(
             label: 'Activty',
-            icon: Icon(Icons.local_activity),
+            icon: Icon(FontAwesomeIcons.fileInvoiceDollar),
           ),
           BottomNavigationBarItem(
-            label: 'Settings',
-            icon: Icon(Icons.settings),
+            label: 'Me',
+            icon: Icon(Icons.person_2),
           ),
         ],
       ),

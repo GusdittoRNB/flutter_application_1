@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
         '/register': (context) => RegistrationPage(),
         '/home': (context) => HomePage(),
         '/profile': (context) => ProfilePage(),
+        '/member': (context) => MemberPage(),
+        '/addmember': (context) => AddMemberPage(),
+        '/editmember': (context) => EditUser(),
       },
       initialRoute: '/',
     );

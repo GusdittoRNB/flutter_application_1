@@ -9,3 +9,6 @@ part 'register.dart';
 part 'login.dart';
 part 'home.dart';
 part 'profile.dart';
+part 'member.dart';
+part 'addmember.dart';
+part 'editmember.dart';
