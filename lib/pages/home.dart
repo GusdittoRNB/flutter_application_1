@@ -1,6 +1,12 @@
 part of 'pages.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
 
   final _dio = Dio();
   final _storage = GetStorage();
@@ -11,7 +17,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Home',
+          'e-Silih',
           style: blackTextStyle.copyWith(
             fontSize: 20,
           ),
@@ -19,88 +25,97 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/profile');
+              
             },
-            icon: Icon(Icons.account_circle),
+            icon: Icon(Icons.notifications),
             iconSize: 30,
           ),
         ],
       ),
-      drawer: NavigationDrawer(
-        children:  [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text(
-                      'Home',
-                      style: blackTextStyle,
-                    ),
-                    onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      drawer: NavigationDrawer(children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                ListTile(
+                  leading: Icon(Icons.home),
+                  title: Text(
+                    'Home',
+                    style: blackTextStyle,
+                  ),
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/home', (route) => false);
                   },
+                ),
+                Divider(
+                  thickness: 2,
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text(
+                    'Profile',
+                    style: blackTextStyle,
                   ),
-                  Divider(
-                    thickness: 2,
+                  onTap: () {
+                    Navigator.pushNamed(context, '/profile');
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.wallet),
+                  title: Text(
+                    'Wallet',
+                    style: blackTextStyle,
                   ),
-                  ListTile(
-                    leading: Icon(Icons.account_circle),
-                    title: Text(
-                      'Profile',
-                      style: blackTextStyle,
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/profile');
-                    },
+                ),
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text(
+                    'Member',
+                    style: blackTextStyle,
                   ),
-                  ListTile(
-                    leading: Icon(Icons.wallet),
-                    title: Text(
-                      'Wallet',
-                      style: blackTextStyle,
-                    ),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/member');
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text(
+                    'Settings',
+                    style: blackTextStyle,
                   ),
-                  ListTile(
-                    leading: Icon(Icons.person),
-                    title: Text(
-                      'Member',
-                      style: blackTextStyle,
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/member');
-                    },
+                ),
+                Divider(
+                  thickness: 2,
+                ),
+                ListTile(
+                  leading: Icon(Icons.login),
+                  title: Text(
+                    'Logout',
+                    style: blackTextStyle,
                   ),
-                  ListTile(
-                    leading: Icon(Icons.settings),
-                    title: Text(
-                      'Settings',
-                      style: blackTextStyle,
-                    ),
-                  ),
-                  Divider(
-                    thickness: 2,
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.login),
-                    title: Text(
-                      'Logout',
-                      style: blackTextStyle,
-                    ),
-                    onTap: () {
-                      goLogout(context);
-                    },
-                  ),
-                ],
-              )
-            ],
-          )
-        ]
-      ),
+                  onTap: () {
+                    goLogout(context);
+                  },
+                ),
+              ],
+            )
+          ],
+        )
+      ]),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index; // Ubah _selectedIndex saat item diklik
+            if (index == 4) {
+              Navigator.pushNamed(context,
+                  '/profile'); // Menuju halaman profil jika item 'Me' ditekan
+            }
+          });
+        },
         items: [
           BottomNavigationBarItem(
             label: 'Home',
@@ -121,7 +136,8 @@ class HomePage extends StatelessWidget {
                   10), // Padding agar ikon tidak terlalu dekat dengan tepi latar belakang
               child: Icon(Icons.attach_money_sharp,
                   size: 30,
-                  color: primaryColor), // Ikon yang ditempatkan di dalam latar belakang
+                  color:
+                      primaryColor), // Ikon yang ditempatkan di dalam latar belakang
             ),
           ),
           BottomNavigationBarItem(
@@ -135,10 +151,10 @@ class HomePage extends StatelessWidget {
         ],
       ),
     );
-  } 
+  }
 
-  void goLogout(BuildContext context) async{
-    try{
+  void goLogout(BuildContext context) async {
+    try {
       final _response = await _dio.get(
         '${_apiUrl}/logout',
         options: Options(
@@ -152,5 +168,4 @@ class HomePage extends StatelessWidget {
       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     }
   }
-
 }

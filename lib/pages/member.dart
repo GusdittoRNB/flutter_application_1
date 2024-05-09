@@ -74,16 +74,17 @@ class _MemberPageState extends State<MemberPage> {
       context: context,
       builder: (BuildContext context) {
         return Container(
+          width: MediaQuery.of(context).size.width * 0.9,
           padding: EdgeInsets.all(defaultMargin),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'e-Silih Member Details',
-                style: blackTextStyle.copyWith(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold
+              Center(
+                child: Text(
+                  'e-Silih Member Detail',
+                  style: blackTextStyle.copyWith(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(height: 16),
@@ -112,6 +113,10 @@ class _MemberPageState extends State<MemberPage> {
                 style: blackTextStyle.copyWith(
                   fontSize: 17,
                 ),),
+                Text('Status Aktif: ${_selectedMember!.statusAktif}',
+                style: blackTextStyle.copyWith(
+                  fontSize: 17,
+                ),),
               ]
             ],
           ),
@@ -121,12 +126,12 @@ class _MemberPageState extends State<MemberPage> {
   }
 
   void _editMember(Member member) {
-  Navigator.pushNamed(
-    context,
-    '/editmember',
-    arguments: member, // Meneruskan data anggota sebagai argumen
-  );
-}
+    Navigator.pushNamed(
+      context,
+      '/editmember',
+      arguments: member, // Meneruskan data anggota sebagai argumen
+    );
+  }
 
   void _confirmDeleteMember(Member member) {
     showDialog(
@@ -338,6 +343,7 @@ class Member {
   final String alamat;
   final String tanggalLahir;
   final String telepon;
+  final int statusAktif;
 
   Member({
     required this.id,
@@ -346,6 +352,7 @@ class Member {
     required this.alamat,
     required this.tanggalLahir,
     required this.telepon,
+    required this.statusAktif,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
@@ -356,6 +363,7 @@ class Member {
       alamat: json['alamat'],
       tanggalLahir: json['tgl_lahir'],
       telepon: json['telepon'],
+      statusAktif: json['status_aktif'],
     );
   }
 

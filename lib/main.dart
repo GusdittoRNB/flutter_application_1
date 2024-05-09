@@ -22,7 +22,10 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => ProfilePage(),
         '/member': (context) => MemberPage(),
         '/addmember': (context) => AddMemberPage(),
-        '/editmember': (context) => EditUser(),
+        '/editmember': (context) {
+          final member = ModalRoute.of(context)!.settings.arguments as Member;
+          return EditMemberPage(member: member);
+        },
       },
       initialRoute: '/',
     );

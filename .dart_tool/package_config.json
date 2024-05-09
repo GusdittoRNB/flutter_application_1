@@ -44,6 +44,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "date_picker_plus",
+      "rootUri": "file:///Users/idabaguspaalakaarnb/.pub-cache/hosted/pub.dev/date_picker_plus-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "dio",
       "rootUri": "file:///Users/idabaguspaalakaarnb/.pub-cache/hosted/pub.dev/dio-5.4.3+1",
       "packageUri": "lib/",
@@ -114,6 +120,12 @@
       "rootUri": "file:///Users/idabaguspaalakaarnb/.pub-cache/hosted/pub.dev/http_parser-4.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "intl",
+      "rootUri": "file:///Users/idabaguspaalakaarnb/.pub-cache/hosted/pub.dev/intl-0.19.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "leak_tracker",
@@ -302,7 +314,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-05-05T09:46:27.842661Z",
+  "generated": "2024-05-09T10:35:59.101078Z",
   "generator": "pub",
   "generatorVersion": "3.3.2"
 }

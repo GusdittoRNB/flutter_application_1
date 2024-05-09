@@ -1,28 +1,52 @@
 part of 'pages.dart';
 
-class EditUser extends StatefulWidget {
-  const EditUser({super.key});
+class EditMemberPage extends StatefulWidget {
+  final Member member;
+
+  const EditMemberPage({Key? key, required this.member}) : super(key: key);
 
   @override
-  State<EditUser> createState() => _EditUserState();
+  _EditMemberPageState createState() => _EditMemberPageState();
 }
 
-class _EditUserState extends State<EditUser> {
-  final _formKey = GlobalKey<FormState>();
-  TextEditingController _nomorIndukController = TextEditingController();
-  TextEditingController _namaController = TextEditingController();
-  TextEditingController _alamatController = TextEditingController();
-  TextEditingController _tglLahirController = TextEditingController();
-  TextEditingController _noTeleponController = TextEditingController();
+class _EditMemberPageState extends State<EditMemberPage> {
+  late TextEditingController _nomorIndukController;
+  late TextEditingController _namaController;
+  late TextEditingController _alamatController;
+  late TextEditingController _teleponController;
+  late int id;
+  late int _selectedStatus; // Nilai default status aktif
 
-  Anggota? anggota;
+  DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inisialisasi controller dengan data awal yang akan diedit
+    id = widget.member.id;
+    _nomorIndukController = TextEditingController(text: widget.member.nomorInduk.toString());
+    _namaController = TextEditingController(text: widget.member.name);
+    _alamatController = TextEditingController(text: widget.member.alamat);
+    _teleponController = TextEditingController(text: widget.member.telepon);
+    _selectedStatus = widget.member.statusAktif;
+    _selectedDate = DateTime.parse(widget.member.tanggalLahir);
+  }
+
+  @override
+  void dispose() {
+    // Dispose controller ketika widget dihilangkan
+    _nomorIndukController.dispose();
+    _namaController.dispose();
+    _alamatController.dispose();
+    _teleponController.dispose();
+    super.dispose();
+  }
+
   final _dio = Dio();
   final _storage = GetStorage();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
-  int id = 135;
 
-
-  void goEditUser() async {
+  void goEditMember() async {
     try {
       final _response = await _dio.put(
         '${_apiUrl}/anggota/${id}',
@@ -30,9 +54,9 @@ class _EditUserState extends State<EditUser> {
           'nomor_induk': _nomorIndukController.text,
           'nama': _namaController.text,
           'alamat': _alamatController.text,
-          'tgl_lahir': _tglLahirController.text,
-          'telepon': _noTeleponController.text,
-         'status_aktif': anggota?.status_aktif ?? 1,
+          'tgl_lahir': _selectedDate != null ? _selectedDate!.toString() : '',
+          'telepon': _teleponController.text,
+          'status_aktif': _selectedStatus,
         },
         options: Options(
           headers: {
@@ -42,223 +66,246 @@ class _EditUserState extends State<EditUser> {
         ),
       );
       print(_response.data);
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Anggota berhasil diedit!"),
-              content: Text('Yeay!'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text("OK"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            );
-          });
+      Navigator.pushNamed(context, '/home');
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Oops!"),
-              content: Text(e.response?.data['message'] ?? 'An error occurred'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text("OK"),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/member',
-                    );
-                  },
-                ),
-              ],
-            );
-          });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Update failed. Please check your data or login again.',
+            textAlign: TextAlign.center,
+          ),
+          duration: Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFAFAFA),
       appBar: AppBar(
-        title: Text('Edit Anggota',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: const Color(0xFF5E5695),
-                )),
+        title: Text(
+          'Edit Member',
+          style: blackTextStyle.copyWith(
+            fontSize: 20,
+          ),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ListView(children: [
-          const SizedBox(height: 10),
-          Form(
-              key: _formKey,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TextFormField(
-                      controller: _nomorIndukController,
-                      validator: (_nomorIndukController) {
-                        if (_nomorIndukController == null ||
-                            _nomorIndukController.isEmpty) {
-                          return 'Tolong masukkan nomor induk.';
-                        }
-                        return null;
-                      },
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Nomor Induk',
-                        hintText: 'Masukkan nomor induk',
-                        prefixIcon:
-                            Icon(Icons.perm_identity, color: Color(0xFF5E5695)),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(defaultMargin),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Update Member",
+                style: secondaryTextStyle.copyWith(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10.0),
+              Text(
+                'Expand the community reach by make the members up to date',
+                style: blackTextStyle.copyWith(
+                  fontSize: 14,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 30.0),
+              TextField(
+                controller: _nomorIndukController,
+                decoration: InputDecoration(
+                  labelText: 'Nomor Induk',
+                  filled: true,
+                  fillColor: fieldColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: secondaryColor),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  labelStyle: blackTextStyle.copyWith(fontSize: 15),
+                ),
+              ),
+              SizedBox(height: 20.0),
+              TextField(
+                controller: _namaController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  filled: true,
+                  fillColor: fieldColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: secondaryColor),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  labelStyle: blackTextStyle.copyWith(fontSize: 15),
+                ),
+              ),
+              SizedBox(height: 20.0),
+              TextField(
+                controller: _alamatController,
+                decoration: InputDecoration(
+                  labelText: 'Alamat',
+                  filled: true,
+                  fillColor: fieldColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: secondaryColor),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  labelStyle: blackTextStyle.copyWith(fontSize: 15),
+                ),
+              ),
+              SizedBox(height: 20.0),
+              GestureDetector(
+                onTap: () async {
+                  DateTime? selectedDate = await showDatePicker(
+                    context: context,
+                    initialDate: _selectedDate ?? DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
+                  );
+                  if (selectedDate != null) {
+                    setState(() {
+                      _selectedDate = selectedDate;
+                    });
+                  }
+                },
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    readOnly: true, // Membuat TextField hanya bisa dibaca
+                    controller: TextEditingController(
+                      text: _selectedDate != null
+                          ? '${_selectedDate!.year}-${_selectedDate!.month}-${_selectedDate!.day}'
+                          : '', // Tampilkan tanggal yang dipilih jika ada
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Tanggal Lahir',
+                      filled: true,
+                      fillColor: fieldColor,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: secondaryColor),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      labelStyle: blackTextStyle.copyWith(fontSize: 15),
+                      suffixIcon: Icon(Icons.calendar_today),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.0),
+              TextField(
+                controller: _teleponController,
+                decoration: InputDecoration(
+                  labelText: 'Telepon',
+                  filled: true,
+                  fillColor: fieldColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: secondaryColor),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  labelStyle: blackTextStyle.copyWith(fontSize: 15),
+                ),
+              ),
+              SizedBox(height: 20.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Status Aktif:',
+                    style: blackTextStyle.copyWith(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Radio(
+                        value: 1,
+                        groupValue: _selectedStatus,
+                        onChanged: (int? value) {
+                          setState(() {
+                            _selectedStatus = value ??
+                                _selectedStatus; // Pertahankan nilai _selectedStatus jika value null
+                          });
+                        },
+                      ),
+                      Text('Aktif'),
+                      Radio(
+                        value: 0,
+                        groupValue: _selectedStatus,
+                        onChanged: (int? value) {
+                          setState(() {
+                            _selectedStatus = value ??
+                                _selectedStatus; // Pertahankan nilai _selectedStatus jika value null
+                          });
+                        },
+                      ),
+                      Text('Non-Aktif'),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/member');
+                    },
+                    child: Text(
+                      'Cancel',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 14,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _namaController,
-                      validator: (_namaController) {
-                        if (_namaController == null ||
-                            _namaController.isEmpty) {
-                          return 'Tolong masukkan nama.';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Nama',
-                        hintText: 'Masukkan nama',
-                        prefixIcon: Icon(Icons.face, color: Color(0xFF5E5695)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red, // Warna merah
+                    ),
+                  ),
+                  SizedBox(width: 8), // Jarak antara tombol
+                  ElevatedButton(
+                    onPressed: () {
+                      // Aksi kedua ketika tombol ditekan
+                      goEditMember();
+                    },
+                    child: Text(
+                      'Update',
+                      style: whiteTextStyle.copyWith(
+                        fontSize: 14,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _alamatController,
-                      validator: (_alamatController) {
-                        if (_alamatController == null ||
-                            _alamatController.isEmpty) {
-                          return 'Tolong masukkan alamat.';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Alamat',
-                        hintText: 'Masukkan alamat',
-                        prefixIcon: Icon(Icons.house, color: Color(0xFF5E5695)),
-                      ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: secondaryColor, // Warna merah
                     ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _tglLahirController,
-                      validator: (_tglLahirController) {
-                        if (_tglLahirController == null ||
-                            _tglLahirController.isEmpty) {
-                          return 'Tolong masukkan alamat.';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Alamat',
-                        hintText: 'Masukkan alamat',
-                        prefixIcon: Icon(Icons.house, color: Color(0xFF5E5695)),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _noTeleponController,
-                      validator: (_noTeleponController) {
-                        if (_noTeleponController == null ||
-                            _noTeleponController.isEmpty) {
-                          return 'Tolong masukkan nomor telepon.';
-                        }
-                        return null;
-                      },
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Nomor Telepon',
-                        hintText: 'Masukkan nomor telepon',
-                        prefixIcon: Icon(Icons.phone, color: Color(0xFF5E5695)),
-                      ),
-                    ),
-                    
-                    const SizedBox(height: 70),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState?.save();
-                                  goEditUser();
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFFF857BC9),
-                                  elevation: 1,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  padding: EdgeInsets.symmetric(vertical: 10)),
-                              child: Text('Edit Anggota',
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 16,
-                                      color: Colors.white))),
-                        ),
-                      ],
-                    ),
-                  ]))
-        ]),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
-  }
-}
-
-class Anggota {
-  final int id;
-  final int nomor_induk;
-  final String nama;
-  final String alamat;
-  final String tgl_lahir;
-  final String telepon;
-  final String? image_url;
-  final int? status_aktif;
-
-  Anggota({
-    required this.id,
-    required this.nomor_induk,
-    required this.nama,
-    required this.alamat,
-    required this.tgl_lahir,
-    required this.telepon,
-    required this.image_url,
-    required this.status_aktif,
-  });
-
-  factory Anggota.fromJson(Map<String, dynamic> json) {
-    final data = json['data'] as Map<String, dynamic>?;
-
-    if (data != null) {
-      final anggotaData = data['anggota'] as Map<String, dynamic>?;
-
-      if (anggotaData != null) {
-        return Anggota(
-          id: anggotaData['id'],
-          nomor_induk: anggotaData['nomor_induk'],
-          nama: anggotaData['nama'],
-          alamat: anggotaData['alamat'],
-          tgl_lahir: anggotaData['tgl_lahir'],
-          telepon: anggotaData['telepon'],
-          image_url: anggotaData['image_url'],
-          status_aktif: anggotaData['status_aktif'],
-        );
-      }
-    }
-
-    // If data or anggotaData is null, throw an exception or return a default instance
-    throw Exception('Failed to parse Anggota from JSON');
   }
 }

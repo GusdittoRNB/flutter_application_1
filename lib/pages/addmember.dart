@@ -6,7 +6,6 @@ class AddMemberPage extends StatefulWidget {
 }
 
 class _AddMemberPageState extends State<AddMemberPage> {
-
   final _dio = Dio();
   final _storage = GetStorage();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
@@ -14,8 +13,9 @@ class _AddMemberPageState extends State<AddMemberPage> {
   final TextEditingController nomorIndukController = TextEditingController();
   final TextEditingController namaController = TextEditingController();
   final TextEditingController alamatController = TextEditingController();
-  final TextEditingController tanggalLahirController = TextEditingController();
   final TextEditingController teleponController = TextEditingController();
+
+  DateTime? _selectedDate;
 
   @override
   Widget build(BuildContext context) {
@@ -104,21 +104,44 @@ class _AddMemberPageState extends State<AddMemberPage> {
                 ),
               ),
               SizedBox(height: 20.0),
-              TextField(
-                controller: tanggalLahirController,
-                decoration: InputDecoration(
-                  labelText: 'Tanggal Lahir (yyyy-mm-dd)',
-                  filled: true,
-                  fillColor: fieldColor,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(10),
+              GestureDetector(
+                onTap: () async {
+                  DateTime? selectedDate = await showDatePicker(
+                    context: context,
+                    initialDate: _selectedDate ?? DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
+                  );
+                  if (selectedDate != null) {
+                    setState(() {
+                      _selectedDate = selectedDate;
+                    });
+                  }
+                },
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    readOnly: true, // Membuat TextField hanya bisa dibaca
+                    controller: TextEditingController(
+                      text: _selectedDate != null
+                          ? '${_selectedDate!.year}-${_selectedDate!.month}-${_selectedDate!.day}'
+                          : '', // Tampilkan tanggal yang dipilih jika ada
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Tanggal Lahir',
+                      filled: true,
+                      fillColor: fieldColor,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: secondaryColor),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      labelStyle: blackTextStyle.copyWith(fontSize: 15),
+                      suffixIcon: Icon(Icons.calendar_today),
+                    ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: secondaryColor),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  labelStyle: blackTextStyle.copyWith(fontSize: 15),
                 ),
               ),
               SizedBox(height: 20.0),
@@ -194,7 +217,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
           'nomor_induk': nomorIndukController.text,
           'nama': namaController.text,
           'alamat': alamatController.text,
-          'tgl_lahir': tanggalLahirController.text,
+          'tgl_lahir': _selectedDate != null ? _selectedDate!.toString() : '',
           'telepon': teleponController.text,
         },
       );
@@ -203,19 +226,20 @@ class _AddMemberPageState extends State<AddMemberPage> {
       nomorIndukController.clear();
       namaController.clear();
       alamatController.clear();
-      tanggalLahirController.clear();
       teleponController.clear();
       Navigator.pushNamed(context, '/member');
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Add failed. Please check your data or login again.', textAlign: TextAlign.center,),
+          content: Text(
+            'Add failed. Please check your data or login again.',
+            textAlign: TextAlign.center,
+          ),
           duration: Duration(seconds: 3),
-          behavior: SnackBarBehavior.floating, 
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }
   }
-
 }
