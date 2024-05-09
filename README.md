@@ -17,4 +17,4 @@ Berikut adalah tampilannya
 
 <img width="363" alt="Screenshot 2024-04-28 at 01 42 12" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/fea30736-755a-4060-8cea-37e78bfb9205">
 
-<img width="368" alt="Screenshot 2024-05-09 at 22 29 37" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/08aa811d-5ec1-495c-bbfe-6cdfd3ac916d">
+<img width="358" alt="Screenshot 2024-05-09 at 22 29 37" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/08aa811d-5ec1-495c-bbfe-6cdfd3ac916d">
