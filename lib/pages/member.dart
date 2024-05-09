@@ -60,9 +60,12 @@ class _MemberPageState extends State<MemberPage> {
       Navigator.pushReplacementNamed(context, '/');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Token is expired. Please login again.', textAlign: TextAlign.center,),
+          content: Text(
+            'Token is expired. Please login again.',
+            textAlign: TextAlign.center,
+          ),
           duration: Duration(seconds: 3),
-          behavior: SnackBarBehavior.floating, 
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }
@@ -89,34 +92,48 @@ class _MemberPageState extends State<MemberPage> {
               ),
               SizedBox(height: 16),
               if (_selectedMember != null) ...[
-                Text('Id: ${_selectedMember!.id}',
-                style: blackTextStyle.copyWith(
-                  fontSize: 17,
-                ),),
-                Text('Nomor Induk: ${_selectedMember!.nomorInduk}',
-                style: blackTextStyle.copyWith(
-                  fontSize: 17,
-                ),),
-                Text('Name: ${_selectedMember!.name}',
-                style: blackTextStyle.copyWith(
-                  fontSize: 17,
-                ),),
-                Text('Alamat: ${_selectedMember!.alamat}',
-                style: blackTextStyle.copyWith(
-                  fontSize: 17,
-                ),),
-                Text('Tanggal Lahir: ${_selectedMember!.tanggalLahir}',
-                style: blackTextStyle.copyWith(
-                  fontSize: 17,
-                ),),
-                Text('Telepon: ${_selectedMember!.telepon}',
-                style: blackTextStyle.copyWith(
-                  fontSize: 17,
-                ),),
-                Text('Status Aktif: ${_selectedMember!.statusAktif}',
-                style: blackTextStyle.copyWith(
-                  fontSize: 17,
-                ),),
+                Text(
+                  'Id: ${_selectedMember!.id}',
+                  style: blackTextStyle.copyWith(
+                    fontSize: 17,
+                  ),
+                ),
+                Text(
+                  'Nomor Induk: ${_selectedMember!.nomorInduk}',
+                  style: blackTextStyle.copyWith(
+                    fontSize: 17,
+                  ),
+                ),
+                Text(
+                  'Name: ${_selectedMember!.name}',
+                  style: blackTextStyle.copyWith(
+                    fontSize: 17,
+                  ),
+                ),
+                Text(
+                  'Alamat: ${_selectedMember!.alamat}',
+                  style: blackTextStyle.copyWith(
+                    fontSize: 17,
+                  ),
+                ),
+                Text(
+                  'Tanggal Lahir: ${_selectedMember!.tanggalLahir}',
+                  style: blackTextStyle.copyWith(
+                    fontSize: 17,
+                  ),
+                ),
+                Text(
+                  'Telepon: ${_selectedMember!.telepon}',
+                  style: blackTextStyle.copyWith(
+                    fontSize: 17,
+                  ),
+                ),
+                Text(
+                  'Status Aktif: ${_selectedMember!.statusAktif}',
+                  style: blackTextStyle.copyWith(
+                    fontSize: 17,
+                  ),
+                ),
               ]
             ],
           ),
@@ -161,7 +178,7 @@ class _MemberPageState extends State<MemberPage> {
   }
 
   void _deleteMember(int id) async {
-  try {
+    try {
       final _response = await _dio.delete(
         '${_apiUrl}/anggota/${id}',
         options: Options(
@@ -174,14 +191,16 @@ class _MemberPageState extends State<MemberPage> {
       print('${e.response} - ${e.response?.statusCode}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Delete failed. Please login again', textAlign: TextAlign.center,),
+          content: Text(
+            'Delete failed. Please login again',
+            textAlign: TextAlign.center,
+          ),
           duration: Duration(seconds: 3),
-          behavior: SnackBarBehavior.floating, 
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -216,117 +235,49 @@ class _MemberPageState extends State<MemberPage> {
               ),
             ),
             SizedBox(height: 20),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                headingRowColor:
-                    MaterialStateColor.resolveWith((states) => secondaryColor),
-                columns: [
-                  DataColumn(
-                    label: Text(
-                      'Id',
-                      style: whiteTextStyle.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _members.length,
+              itemBuilder: (context, index) {
+                final member = _members[index];
+                return Card(
+                  child: ListTile(
+                    title: Text(
+                      member.name,
+                      style: blackTextStyle.copyWith(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Nomor Induk',
-                      style: whiteTextStyle.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    subtitle: Text(
+                      '${member.alamat}',
+                      style: blackTextStyle.copyWith(fontSize: 14),
                     ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Nama',
-                      style: whiteTextStyle.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            _editMember(member);
+                          },
+                          icon: Icon(Icons.edit),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            _confirmDeleteMember(member);
+                          },
+                          icon: Icon(Icons.delete),
+                          color: Colors.red,
+                        ),
+                      ],
                     ),
+                    onTap: () {
+                      setState(() {
+                        _selectedMember = member;
+                      });
+                      _showMemberDetails(context);
+                    },
                   ),
-                  DataColumn(
-                    label: Text(
-                      'Action',
-                      style: whiteTextStyle.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-                rows: _members.map((member) {
-                  return DataRow(
-                    color: MaterialStateColor.resolveWith((states) => primaryColor),
-                    cells: [
-                      DataCell(
-                        Text(
-                          member.id.toString(),
-                          style: blackTextStyle.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        onTap: () {
-                          // Ketika ID diklik, tampilkan detail anggota
-                          setState(() {
-                            _selectedMember = member;
-                          });
-                          _showMemberDetails(context);
-                        },
-                      ),
-                      DataCell(
-                        Text(
-                          member.nomorInduk.toString(),
-                          style: blackTextStyle.copyWith(
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Text(
-                          member.name,
-                          style: blackTextStyle.copyWith(
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Row(
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                // Aksi pertama ketika tombol ditekan
-                                _editMember(member);
-                              },
-                              child: Text('Edit'),
-                            ),
-                            SizedBox(width: 8), // Jarak antara tombol
-                            ElevatedButton(
-                              onPressed: () {
-                                // Aksi kedua ketika tombol ditekan
-                                _confirmDeleteMember(member);
-                              },
-                              child: Text(
-                                'Delete',
-                                style: blackTextStyle.copyWith(
-                                  fontSize: 14,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red, // Warna merah
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ]);
-                }).toList(),
-              ),
+                );
+              },
             ),
           ],
         ),
@@ -366,5 +317,4 @@ class Member {
       statusAktif: json['status_aktif'],
     );
   }
-
 }

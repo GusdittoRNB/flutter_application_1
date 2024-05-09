@@ -24,9 +24,7 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              
-            },
+            onPressed: () {},
             icon: Icon(Icons.notifications),
             iconSize: 30,
           ),
@@ -149,6 +147,50 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.person_2),
           ),
         ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Card untuk aplikasi simpan pinjam
+              Card(
+                elevation: 4, // Elevasi card
+                child: Padding(
+                  padding: const EdgeInsets.all(110.0),
+                ),
+              ),
+              SizedBox(height: 16), // Jarak antara card dan kotak-kotak kecil
+              // GridView untuk kotak-kotak kecil
+              GridView.count(
+                crossAxisCount: 3, // 3 kolom
+                shrinkWrap:
+                    true, // Agar tidak mengambil ruang lebih dari yang diperlukan
+                physics:
+                    NeverScrollableScrollPhysics(), // Tidak dapat di-scroll
+                children: List.generate(
+                  9, // Jumlah kotak-kotak kecil
+                  (index) {
+                    return Container(
+                      color: Colors.grey[200], // Warna latar belakang kotak
+                      margin: EdgeInsets.all(4), // Margin untuk memberikan jarak antara kotak-kotak kecil
+                      child: Center(
+                        child: Text(
+                          '',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
