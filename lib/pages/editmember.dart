@@ -24,7 +24,8 @@ class _EditMemberPageState extends State<EditMemberPage> {
     super.initState();
     // Inisialisasi controller dengan data awal yang akan diedit
     id = widget.member.id;
-    _nomorIndukController = TextEditingController(text: widget.member.nomorInduk.toString());
+    _nomorIndukController =
+        TextEditingController(text: widget.member.nomorInduk.toString());
     _namaController = TextEditingController(text: widget.member.name);
     _alamatController = TextEditingController(text: widget.member.alamat);
     _teleponController = TextEditingController(text: widget.member.telepon);
