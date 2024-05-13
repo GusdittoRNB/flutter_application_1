@@ -13,6 +13,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String _id = '';
   String _name = '';
   String _email = '';
+  bool _isLoading = false; // Variabel untuk menandakan status loading
 
   @override
   void initState() {
@@ -26,71 +27,79 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: Text('Profile'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(defaultMargin),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 50,
-              // Menampilkan foto profil pengguna jika tersedia
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: Text(
-                'ID: $_id',
-                style: blackTextStyle.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(), // Indikator loading
+            )
+          : Padding(
+              padding: EdgeInsets.all(defaultMargin),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    // Menampilkan foto profil pengguna jika tersedia
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: Text(
+                      'ID: $_id',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: Text(
+                      'Name: $_name',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: Text(
+                      'Email: $_email',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  ElevatedButton(
+                    onPressed: () {
+                      goLogout(context);
+                    },
+                    child: Text(
+                      'Logout',
+                      style: whiteTextStyle.copyWith(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: secondaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 10),
-            Center(
-              child: Text(
-                'Name: $_name',
-                style: blackTextStyle.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            Center(
-              child: Text(
-                'Email: $_email',
-                style: blackTextStyle.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                goLogout(context);
-              },
-              child: Text(
-                'Logout',
-                style: whiteTextStyle.copyWith(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: secondaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
   void goUser() async {
+    setState(() {
+      _isLoading = true; // Set isLoading true saat proses dimulai
+    });
+
     try {
       final _response = await _dio.get(
         '${_apiUrl}/user',
@@ -113,15 +122,19 @@ class _ProfilePageState extends State<ProfilePage> {
           _id = id;
           _name = name;
           _email = email;
+          _isLoading = false; // Set isLoading false setelah proses selesai
         });
       } else {
         // Respons gagal
         print('Failed to load user data: ${_response.statusCode}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to load user data', textAlign: TextAlign.center,),
+            content: Text(
+              'Failed to load user data',
+              textAlign: TextAlign.center,
+            ),
             duration: Duration(seconds: 3),
-            behavior: SnackBarBehavior.floating, 
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
@@ -130,16 +143,19 @@ class _ProfilePageState extends State<ProfilePage> {
       Navigator.pushReplacementNamed(context, '/');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Token is expired. Please login again.', textAlign: TextAlign.center,),
+          content: Text(
+            'Token is expired. Please login again.',
+            textAlign: TextAlign.center,
+          ),
           duration: Duration(seconds: 3),
-          behavior: SnackBarBehavior.floating, 
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }
   }
 
-  void goLogout(BuildContext context) async{
-    try{
+  void goLogout(BuildContext context) async {
+    try {
       final _response = await _dio.get(
         '${_apiUrl}/logout',
         options: Options(
@@ -153,5 +169,5 @@ class _ProfilePageState extends State<ProfilePage> {
       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     }
   }
-
+  
 }

@@ -24,7 +24,9 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+
+            },
             icon: Icon(Icons.notifications),
             iconSize: 30,
           ),
@@ -43,8 +45,7 @@ class _HomePageState extends State<HomePage> {
                     style: blackTextStyle,
                   ),
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/home', (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                   },
                 ),
                 Divider(
