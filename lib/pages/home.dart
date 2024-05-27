@@ -24,9 +24,7 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-
-            },
+            onPressed: () {},
             icon: Icon(Icons.notifications),
             iconSize: 30,
           ),
@@ -45,7 +43,8 @@ class _HomePageState extends State<HomePage> {
                     style: blackTextStyle,
                   ),
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/home', (route) => false);
                   },
                 ),
                 Divider(
@@ -62,11 +61,14 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.wallet),
+                  leading: Icon(Icons.menu_open),
                   title: Text(
-                    'Wallet',
+                    'Types',
                     style: blackTextStyle,
                   ),
+                  onTap: () {
+                    // Navigator.pushNamed(context, '/jenistransaksi');
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.person),
@@ -109,7 +111,10 @@ class _HomePageState extends State<HomePage> {
         onTap: (int index) {
           setState(() {
             _selectedIndex = index; // Ubah _selectedIndex saat item diklik
-            if (index == 4) {
+            if (index == 3) {
+              Navigator.pushNamed(context,
+                  '/transaksimember'); // Menuju halaman member untuk transaksi
+            } else if (index == 4) {
               Navigator.pushNamed(context,
                   '/profile'); // Menuju halaman profil jika item 'Me' ditekan
             }
@@ -175,7 +180,8 @@ class _HomePageState extends State<HomePage> {
                   (index) {
                     return Container(
                       color: Colors.grey[200], // Warna latar belakang kotak
-                      margin: EdgeInsets.all(4), // Margin untuk memberikan jarak antara kotak-kotak kecil
+                      margin: EdgeInsets.all(
+                          4), // Margin untuk memberikan jarak antara kotak-kotak kecil
                       child: Center(
                         child: Text(
                           '',

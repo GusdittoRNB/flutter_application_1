@@ -67,7 +67,7 @@ class _EditMemberPageState extends State<EditMemberPage> {
         ),
       );
       print(_response.data);
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushNamed(context, '/member');
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
       ScaffoldMessenger.of(context).showSnackBar(

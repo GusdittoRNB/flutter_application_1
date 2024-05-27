@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/shared/theme_shared.dart';
 import 'package:get_storage/get_storage.dart';
@@ -10,5 +11,11 @@ part 'login.dart';
 part 'home.dart';
 part 'profile.dart';
 part 'member.dart';
+part 'detailmember.dart';
 part 'addmember.dart';
 part 'editmember.dart';
+// part 'jenistransaksi.dart';
+part 'addtabungan.dart';
+part 'transaksimember.dart';
+part 'listtabungan.dart';
+part 'saldotabungan.dart';

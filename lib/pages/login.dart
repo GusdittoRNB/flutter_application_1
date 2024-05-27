@@ -25,6 +25,12 @@ class _LoginPageState extends State<LoginPage> {
             fontSize: 20,
           ),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -188,8 +194,8 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void goLogin() async{
-    try{
+  void goLogin() async {
+    try {
       final _response = await _dio.post(
         '${_apiUrl}/login',
         data: {
@@ -204,12 +210,14 @@ class _LoginPageState extends State<LoginPage> {
       print('${e.response} - ${e.response?.statusCode}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Login failed. Please check your credentials.', textAlign: TextAlign.center,),
+          content: Text(
+            'Login failed. Please check your credentials.',
+            textAlign: TextAlign.center,
+          ),
           duration: Duration(seconds: 3),
-          behavior: SnackBarBehavior.floating, 
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }
   }
-
 }

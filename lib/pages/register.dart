@@ -16,7 +16,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
           style: blackTextStyle.copyWith(
             fontSize: 20,
           ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          },
         ),
       ),
       body: SingleChildScrollView(
@@ -245,12 +252,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
       print('${e.response} - ${e.response?.statusCode}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Register failed. Please check your credentials.', textAlign: TextAlign.center,),
+          content: Text(
+            'Register failed. Please check your credentials.',
+            textAlign: TextAlign.center,
+          ),
           duration: Duration(seconds: 3),
-          behavior: SnackBarBehavior.floating, 
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }
   }
-
 }

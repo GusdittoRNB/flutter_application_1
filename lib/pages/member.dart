@@ -11,15 +11,13 @@ class _MemberPageState extends State<MemberPage> {
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
   List<Member> _members = [];
 
-  Member? _selectedMember;
-
   @override
   void initState() {
     super.initState();
-    _loadMembers(); // Panggil metode untuk memuat anggota saat widget diinisialisasi
+    _loadMembersList(); // Panggil metode untuk memuat anggota saat widget diinisialisasi
   }
 
-  Future<void> _loadMembers() async {
+  Future<void> _loadMembersList() async {
     try {
       final response = await _dio.get(
         '$_apiUrl/anggota',
@@ -71,74 +69,12 @@ class _MemberPageState extends State<MemberPage> {
     }
   }
 
-  // Fungsi untuk menampilkan detail anggota dalam bottom sheet
-  void _showMemberDetails(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          padding: EdgeInsets.all(defaultMargin),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Center(
-                child: Text(
-                  'e-Silih Member Detail',
-                  style: blackTextStyle.copyWith(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              SizedBox(height: 16),
-              if (_selectedMember != null) ...[
-                Text(
-                  'Id: ${_selectedMember!.id}',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 17,
-                  ),
-                ),
-                Text(
-                  'Nomor Induk: ${_selectedMember!.nomorInduk}',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 17,
-                  ),
-                ),
-                Text(
-                  'Name: ${_selectedMember!.name}',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 17,
-                  ),
-                ),
-                Text(
-                  'Alamat: ${_selectedMember!.alamat}',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 17,
-                  ),
-                ),
-                Text(
-                  'Tanggal Lahir: ${_selectedMember!.tanggalLahir}',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 17,
-                  ),
-                ),
-                Text(
-                  'Telepon: ${_selectedMember!.telepon}',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 17,
-                  ),
-                ),
-                Text(
-                  'Status Aktif: ${_selectedMember!.statusAktif}',
-                  style: blackTextStyle.copyWith(
-                    fontSize: 17,
-                  ),
-                ),
-              ]
-            ],
-          ),
-        );
-      },
+  void _showMemberDetail(Member member) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MemberDetailPage(memberId: member.id),
+      ),
     );
   }
 
@@ -186,7 +122,7 @@ class _MemberPageState extends State<MemberPage> {
         ),
       );
       print(_response.data);
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushNamed(context, '/member');
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -206,16 +142,23 @@ class _MemberPageState extends State<MemberPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Member'),
+        title: Text('Member List'),
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/addmember');
+              Navigator.pushNamed(context, '/addmember');
             },
             icon: Icon(Icons.add),
             iconSize: 35,
           ),
         ],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/home', (route) => false);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: defaultMargin),
@@ -240,41 +183,42 @@ class _MemberPageState extends State<MemberPage> {
               itemCount: _members.length,
               itemBuilder: (context, index) {
                 final member = _members[index];
-                return Card(
-                  child: ListTile(
-                    title: Text(
-                      member.name,
-                      style: blackTextStyle.copyWith(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 5), // Tambahkan padding di sini
+                  child: Card(
+                    child: ListTile(
+                      title: Text(
+                        member.name,
+                        style: blackTextStyle.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        '${member.alamat}',
+                        style: blackTextStyle.copyWith(fontSize: 14),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _editMember(member);
+                            },
+                            icon: Icon(Icons.edit),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              _confirmDeleteMember(member);
+                            },
+                            icon: Icon(Icons.delete),
+                            color: Colors.red,
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        _showMemberDetail(member);
+                      },
                     ),
-                    subtitle: Text(
-                      '${member.alamat}',
-                      style: blackTextStyle.copyWith(fontSize: 14),
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            _editMember(member);
-                          },
-                          icon: Icon(Icons.edit),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            _confirmDeleteMember(member);
-                          },
-                          icon: Icon(Icons.delete),
-                          color: Colors.red,
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      setState(() {
-                        _selectedMember = member;
-                      });
-                      _showMemberDetails(context);
-                    },
                   ),
                 );
               },
