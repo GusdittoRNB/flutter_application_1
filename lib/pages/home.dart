@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'e-Sili',
+          'e-Silih',
           style: blackTextStyle.copyWith(
             fontSize: 20,
           ),
