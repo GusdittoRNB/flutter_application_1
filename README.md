@@ -1,30 +1,36 @@
 # flutter_application_1
-Membuat halaman landing page, login, register, dan home sederhana menggunakan flutter
+Membuat aplikasi simpan pinjam sederhana menggunakan flutter
 
 Untuk gambar di landing page menggunakan gambar dari figma, kemudian untuk kesuluruhan font menggunakan font poppins
 
-forgot password, login with google/facebook/apple, dan search, belum berisi fungsi, tapi profil yang menampilkan user detail sudah bisa
-
 Berikut adalah tampilannya
 
-<img width="363" alt="Screenshot 2024-04-07 at 23 21 51" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/c6e4308d-adbb-4fb5-895e-547fe65e948a">
+<img width="345" alt="Screenshot 2024-05-27 at 10 11 42" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/625c1541-ac1b-41d7-aa00-3935b10beace">
 
-<img width="363" alt="Screenshot 2024-04-07 at 23 21 58" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/4c97d5a9-ebb8-4cbc-9a81-2bb7ad6bd57f">
+<img width="345" alt="Screenshot 2024-05-27 at 10 11 49" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/850ade7d-0705-4653-8de5-cd90416e7e92">
 
-<img width="363" alt="Screenshot 2024-04-07 at 23 22 07" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/fac4b167-edbb-4a86-a645-ed1ef9238281">
+<img width="345" alt="Screenshot 2024-05-27 at 10 11 57" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/d12e97af-aa1d-4026-a6bc-55567b42491f">
 
-<img width="363" alt="Screenshot 2024-04-28 at 01 42 12" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/fea30736-755a-4060-8cea-37e78bfb9205">
+<img width="345" alt="Screenshot 2024-05-27 at 10 12 35" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/ec077b0a-3c04-435b-957c-a5b3b6d7bc0d">
 
-<img width="358" alt="Screenshot 2024-05-09 at 22 29 37" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/08aa811d-5ec1-495c-bbfe-6cdfd3ac916d">
+<img width="345" alt="Screenshot 2024-05-27 at 10 12 58" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/6d6672eb-a15e-4150-8667-a290dddc1af7">
 
-<img width="358" alt="Screenshot 2024-05-09 at 22 32 06" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/fd6b01ce-dbe6-40e0-8181-f69003635afc">
+<img width="345" alt="Screenshot 2024-05-27 at 10 13 11" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/18a93e7b-1373-4506-b9f5-e203227f7b86">
 
-<img width="358" alt="Screenshot 2024-05-09 at 22 32 14" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/98964bd8-9964-4564-b1fb-1c56a899d7b1">
+<img width="345" alt="Screenshot 2024-05-27 at 10 13 19" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/aced9fac-a249-4c08-8283-2a958e170d64">
 
-<img width="351" alt="Screenshot 2024-05-09 at 22 32 21" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/d057acac-0e9d-4df9-b97b-c63b9808de00">
+<img width="345" alt="Screenshot 2024-05-27 at 10 13 28" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/62fceddc-355c-44ca-a66e-d3fb481e6bce">
 
-<img width="351" alt="Screenshot 2024-05-09 at 22 32 29" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/2146b9f5-db0e-4bdd-9833-b273200368af">
+<img width="345" alt="Screenshot 2024-05-27 at 10 13 36" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/91c3d9e3-4e9d-4f45-b8b5-257f867da369">
 
-<img width="351" alt="Screenshot 2024-05-09 at 22 32 39" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/2e428f68-55c2-4b57-91d1-d2bfecae71ee">
+<img width="345" alt="Screenshot 2024-05-27 at 10 13 46" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/df733735-211c-442f-8036-a9fed9f3aa0f">
 
-<img width="351" alt="Screenshot 2024-05-09 at 22 32 47" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/1afaabf9-87ea-4553-9ec9-7305925209dd">
+<img width="345" alt="Screenshot 2024-05-27 at 10 13 54" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/50a3b86b-e316-4558-b717-6513e306a03e">
+
+<img width="345" alt="Screenshot 2024-05-27 at 10 14 10" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/9aa59e7d-51aa-462f-8b7c-903fc92116da">
+
+<img width="345" alt="Screenshot 2024-05-27 at 10 15 07" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/c9a07522-990f-4a67-8905-f2d1ae9d1ee5">
+
+<img width="345" alt="Screenshot 2024-05-27 at 10 15 38" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/988d34ca-15a5-4e32-ba3d-c1b945bde6e9">
+
+<img width="345" alt="Screenshot 2024-05-27 at 10 15 46" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/e34afc39-3b7f-4e36-bd2f-d90595ddaad9">
