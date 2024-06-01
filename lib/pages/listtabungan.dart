@@ -16,6 +16,8 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
   List<Tabungan> tabunganList = [];
   bool isLoading = false;
 
+  String transactionType = '';
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -102,6 +104,23 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
                   itemCount: tabunganList.length,
                   itemBuilder: (context, index) {
                     final tabungan = tabunganList[index];
+
+                    // Tentukan jenis transaksi berdasarkan trxId
+                    if (tabungan.trxId == 1) {
+                      transactionType = 'Saldo Awal';
+                    } else if (tabungan.trxId == 2) {
+                      transactionType = 'Simpanan';
+                    } else if (tabungan.trxId == 3) {
+                      transactionType = 'Penarikan';
+                    } else if (tabungan.trxId == 4) {
+                      transactionType = 'Bunga Simpanan';
+                    } else if (tabungan.trxId == 5) {
+                      transactionType = 'Koreksi Penambahan';
+                    } else if (tabungan.trxId == 6) {
+                      transactionType = 'Koreksi Pengurangan';
+                    } else {
+                      transactionType = 'null'; // Fallback jika trxName null
+                    }
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 5, // Mengurangi jarak vertikal antara tile
@@ -118,12 +137,12 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
                           ),
                           tileColor: Color.fromARGB(255, 241, 238, 247),
                           title: Text(
-                            'ID transaksi: ${tabungan.trxId}',
+                            '${transactionType}',
                             style: blackTextStyle.copyWith(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            'Jumlah: Rp${tabungan.trxNominal}',
+                            'Jumlah: Rp${NumberFormat("#,##0", "id_ID").format(tabungan.trxNominal)}',
                             style: blackTextStyle.copyWith(
                               fontSize: 16,
                             ),

@@ -14,14 +14,16 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
   final _storage = GetStorage();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
   Member? _member;
+  int saldo = 0;
 
   @override
   void initState() {
     super.initState();
-    _loadMemberDetail();
+    getMemberDetail();
+    getSaldoMember();
   }
 
-  Future<void> _loadMemberDetail() async {
+  Future<void> getMemberDetail() async {
     try {
       final _response = await _dio.get(
         '$_apiUrl/anggota/${widget.memberId}',
@@ -66,6 +68,28 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
     }
   }
 
+  Future<void> getSaldoMember() async {
+    try {
+      final _response = await _dio.get(
+        '$_apiUrl/saldo/${widget.memberId}',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+      if (_response.statusCode == 200) {
+        final responseData = _response.data;
+        setState(() {
+          saldo = responseData['data']['saldo'];
+        });
+        print(_response.data);
+      } else {
+        print('Failed to load saldo: ${_response.statusCode}');
+      }
+    } on DioException catch (e) {
+      print('${e.response} - ${e.response?.statusCode}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,21 +111,108 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(height: 10),
-                  buildDetailCard("ID", _member!.id.toString()),
-                  SizedBox(height: 15),
-                  buildDetailCard(
-                      "Nomor Induk", _member!.nomorInduk.toString()),
-                  SizedBox(height: 15),
+                  CircleAvatar(
+                    radius: 50,
+                    // backgroundImage: NetworkImage(_member!.profileImageUrl ?? ''),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildDetailCard("ID", _member!.id.toString()),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: buildDetailCard(
+                            "Nomor Induk", _member!.nomorInduk.toString()),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
                   buildDetailCard("Nama", _member!.name),
-                  SizedBox(height: 15),
+                  SizedBox(height: 10),
                   buildDetailCard("Alamat", _member!.alamat),
-                  SizedBox(height: 15),
-                  buildDetailCard("Tanggal Lahir", _member!.tanggalLahir),
-                  SizedBox(height: 15),
-                  buildDetailCard("Telepon", _member!.telepon),
-                  SizedBox(height: 15),
-                  buildDetailCard("Status",
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildDetailCard(
+                            "Tanggal Lahir", _member!.tanggalLahir),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: buildDetailCard("Telepon", _member!.telepon),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  buildStatusCard("Status",
                       _member!.statusAktif == 1 ? 'Active' : 'Inactive'),
+                  SizedBox(height: 10),
+                  buildSaldoCard("Saldo",
+                      'Rp${NumberFormat("#,##0", "id_ID").format(saldo)}'),
+                  SizedBox(height: 105),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/listtabungan',
+                              arguments: _member!.id,
+                            );
+                          },
+                          child: Text(
+                            'Daftar Transaksi',
+                            style: whiteTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            backgroundColor: secondaryColor,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/addtabungan',
+                              arguments: {
+                                'id': _member!.id,
+                                'nomor_induk': _member!.nomorInduk,
+                                'nama': _member!.name,
+                              },
+                            );
+                          },
+                          child: Text(
+                            'Add Transaksi',
+                            style: whiteTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            backgroundColor: secondaryColor,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -110,17 +221,17 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
 
   Widget buildDetailCard(String label, String value) {
     return Container(
-      padding: EdgeInsets.all(12),
-      margin: EdgeInsets.symmetric(vertical: 5),
+      padding: EdgeInsets.all(8),
+      margin: EdgeInsets.symmetric(vertical: 3),
       decoration: BoxDecoration(
         color: Color.fromARGB(255, 241, 238, 247),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.7),
-            spreadRadius: 2,
-            blurRadius: 3,
-            offset: Offset(0, 3),
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -130,15 +241,86 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
           Text(
             label,
             style: blackTextStyle.copyWith(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 3),
           Text(
             value,
             style: blackTextStyle.copyWith(
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildStatusCard(String label, String value) {
+    return Container(
+      padding: EdgeInsets.all(8),
+      margin: EdgeInsets.symmetric(vertical: 3),
+      decoration: BoxDecoration(
+        color: value == 'Active' ? Colors.green[100] : Colors.red[100],
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(
+            value == 'Active' ? Icons.check_circle : Icons.cancel,
+            color: value == 'Active' ? Colors.green : Colors.red,
+          ),
+          SizedBox(width: 8),
+          Text(
+            '$label: $value',
+            style: blackTextStyle.copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSaldoCard(String label, String value) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(vertical: 3),
+      decoration: BoxDecoration(
+        color: Colors.blue[100],
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.account_balance_wallet,
+            color: Colors.blue,
+          ),
+          SizedBox(width: 8),
+          Text(
+            '$label: $value',
+            style: blackTextStyle.copyWith(
               fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue[800],
             ),
           ),
         ],

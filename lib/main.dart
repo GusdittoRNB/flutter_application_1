@@ -26,11 +26,8 @@ class MyApp extends StatelessWidget {
           final member = ModalRoute.of(context)!.settings.arguments as Member;
           return EditMemberPage(member: member);
         },
-        // '/jenistransaksi': (context) => TransactionTypePage(),
         '/addtabungan': (context) => AddTabunganPage(),
-        '/transaksimember': (context) => TransaksiMemberPage(),
         '/listtabungan': (context) => ListTabunganPage(),
-        '/saldotabungan': (context) => SaldoTabunganPage(),
       },
       initialRoute: '/',
     );

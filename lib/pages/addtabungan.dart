@@ -6,15 +6,12 @@ class TransactionType {
 
   TransactionType({required this.id, required this.trxName});
 
-  // Define static transaction types
-  static final List<TransactionType> predefinedTransactionTypes = [
-    TransactionType(id: 1, trxName: 'Saldo Awal'),
-    TransactionType(id: 2, trxName: 'Simpanan'),
-    TransactionType(id: 3, trxName: 'Penarikan'),
-    TransactionType(id: 4, trxName: 'Bunga Simpanan'),
-    TransactionType(id: 5, trxName: 'Koreksi Penambahan'),
-    TransactionType(id: 6, trxName: 'Koreksi Pengurangan'),
-  ];
+  factory TransactionType.fromJson(Map<String, dynamic> json) {
+    return TransactionType(
+      id: json['id'],
+      trxName: json['trx_name'],
+    );
+  }
 }
 
 class AddTabunganPage extends StatefulWidget {
@@ -37,13 +34,13 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
   late int memberId;
   late int nomorInduk;
   String nama = '';
-  late TransactionType _selectedTransactionType;
+  List<TransactionType> _transactionTypes = [];
+  TransactionType? _selectedTransactionType;
 
   @override
   void initState() {
     super.initState();
-    // Initialize selected transaction type with the first item
-    _selectedTransactionType = TransactionType.predefinedTransactionTypes.first;
+    _loadTransactionTypes();
   }
 
   @override
@@ -62,6 +59,35 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
     namaController.text = nama;
   }
 
+  Future<void> _loadTransactionTypes() async {
+    try {
+      final response = await _dio.get(
+        '$_apiUrl/jenistransaksi',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData =
+            response.data['data']['jenistransaksi'];
+        setState(() {
+          _transactionTypes = responseData
+              .map((json) => TransactionType.fromJson(json))
+              .toList();
+          _selectedTransactionType = _transactionTypes.first;
+        });
+      } else {
+        _showErrorDialog(
+            'Failed to load transaction types: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      print('${e.response} - ${e.response?.statusCode}');
+      _showErrorDialog('Token is expired. Please login again.');
+      Navigator.pushReplacementNamed(context, '/');
+    }
+  }
+
   Future<void> addTabungan() async {
     final trxNominal = nominalController.text;
 
@@ -73,7 +99,8 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
         ),
         data: {
           'anggota_id': memberId,
-          'trx_id': _selectedTransactionType.id,
+          'trx_id': _selectedTransactionType!.id,
+          'trx_name': _selectedTransactionType!.trxName,
           'trx_nominal': int.parse(trxNominal),
         },
       );
@@ -89,7 +116,7 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
                 TextButton(
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, '/transaksimember', (route) => false);
+                        context, '/member', (route) => false);
                   },
                   child: Text('OK'),
                 ),
@@ -127,7 +154,7 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
             TextButton(
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(
-                    context, '/transaksimember', (route) => false);
+                    context, '/member', (route) => false);
               },
               child: Text('OK'),
             ),
@@ -245,11 +272,10 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
                 value: _selectedTransactionType,
                 onChanged: (TransactionType? newValue) {
                   setState(() {
-                    _selectedTransactionType = newValue!;
+                    _selectedTransactionType = newValue;
                   });
                 },
-                items: TransactionType.predefinedTransactionTypes
-                    .map((TransactionType type) {
+                items: _transactionTypes.map((TransactionType type) {
                   return DropdownMenuItem<TransactionType>(
                     value: type,
                     child: Text(
@@ -288,7 +314,8 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
                 minWidth: double.infinity,
                 height: 60,
                 onPressed: () {
-                  if (nominalController.text.isNotEmpty) {
+                  if (nominalController.text.isNotEmpty &&
+                      _selectedTransactionType != null) {
                     addTabungan();
                   } else {
                     _showErrorDialog(

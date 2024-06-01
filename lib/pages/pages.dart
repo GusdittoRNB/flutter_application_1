@@ -4,6 +4,7 @@ import 'package:flutter_application_1/shared/theme_shared.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 part 'welcome_pages.dart';
 part 'register.dart';
@@ -14,8 +15,5 @@ part 'member.dart';
 part 'detailmember.dart';
 part 'addmember.dart';
 part 'editmember.dart';
-// part 'jenistransaksi.dart';
 part 'addtabungan.dart';
-part 'transaksimember.dart';
 part 'listtabungan.dart';
-part 'saldotabungan.dart';

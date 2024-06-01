@@ -123,9 +123,9 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///Users/idabaguspaalakaarnb/.pub-cache/hosted/pub.dev/intl-0.19.0",
+      "rootUri": "file:///Users/idabaguspaalakaarnb/.pub-cache/hosted/pub.dev/intl-0.17.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "leak_tracker",
@@ -314,7 +314,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-05-26T18:11:48.302663Z",
+  "generated": "2024-06-01T15:57:59.072861Z",
   "generator": "pub",
   "generatorVersion": "3.3.2"
 }
