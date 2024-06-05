@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
         },
         '/addtabungan': (context) => AddTabunganPage(),
         '/listtabungan': (context) => ListTabunganPage(),
+        '/addbunga': (context) => AddBungaPage(),
       },
       initialRoute: '/',
     );

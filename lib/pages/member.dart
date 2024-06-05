@@ -11,6 +11,8 @@ class _MemberPageState extends State<MemberPage> {
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
   List<Member> _members = [];
 
+  String _searchKeyword = '';
+
   @override
   void initState() {
     super.initState();
@@ -171,7 +173,9 @@ class _MemberPageState extends State<MemberPage> {
                 prefixIcon: Icon(Icons.search),
               ),
               onChanged: (value) {
-                // Implement search functionality
+                setState(() {
+                  _searchKeyword = value.toLowerCase();
+                });
               },
               style: blackTextStyle.copyWith(
                 fontSize: 15,
@@ -183,44 +187,51 @@ class _MemberPageState extends State<MemberPage> {
               itemCount: _members.length,
               itemBuilder: (context, index) {
                 final member = _members[index];
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: 5), // Tambahkan padding di sini
-                  child: Card(
-                    child: ListTile(
-                      title: Text(
-                        member.name,
-                        style: blackTextStyle.copyWith(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                if (_searchKeyword.isEmpty ||
+                    member.name.toLowerCase().contains(_searchKeyword) ||
+                    member.alamat.toLowerCase().contains(_searchKeyword)) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: 5), // Tambahkan padding di sini
+                    child: Card(
+                      child: ListTile(
+                        title: Text(
+                          member.name,
+                          style: blackTextStyle.copyWith(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          '${member.alamat}',
+                          style: blackTextStyle.copyWith(fontSize: 14),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                _editMember(member);
+                              },
+                              icon: Icon(Icons.edit),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                _confirmDeleteMember(member);
+                              },
+                              icon: Icon(Icons.delete),
+                              color: Colors.red,
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          _showMemberDetail(member);
+                        },
                       ),
-                      subtitle: Text(
-                        '${member.alamat}',
-                        style: blackTextStyle.copyWith(fontSize: 14),
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              _editMember(member);
-                            },
-                            icon: Icon(Icons.edit),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              _confirmDeleteMember(member);
-                            },
-                            icon: Icon(Icons.delete),
-                            color: Colors.red,
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        _showMemberDetail(member);
-                      },
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  // Jika anggota tidak cocok dengan pencarian, kembalikan widget kosong
+                  return SizedBox.shrink();
+                }
               },
             ),
           ],

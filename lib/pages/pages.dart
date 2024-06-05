@@ -17,3 +17,4 @@ part 'addmember.dart';
 part 'editmember.dart';
 part 'addtabungan.dart';
 part 'listtabungan.dart';
+part 'addbunga.dart';

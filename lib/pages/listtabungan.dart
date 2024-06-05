@@ -18,6 +18,8 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
 
   String transactionType = '';
 
+  String _searchKeyword = '';
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -96,62 +98,101 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
           ),
         ),
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : tabunganList.isEmpty
-              ? Center(child: Text('Belum Memiliki Tabungan'))
-              : ListView.builder(
-                  itemCount: tabunganList.length,
-                  itemBuilder: (context, index) {
-                    final tabungan = tabunganList[index];
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search...',
+                prefixIcon: Icon(Icons.search),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchKeyword = value.toLowerCase();
+                });
+              },
+              style: blackTextStyle.copyWith(
+                fontSize: 15,
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          Expanded(
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : tabunganList.isEmpty
+                    ? Center(child: Text('Belum Memiliki Tabungan'))
+                    : ListView.builder(
+                        itemCount: tabunganList.length,
+                        itemBuilder: (context, index) {
+                          final tabungan = tabunganList[index];
 
-                    // Tentukan jenis transaksi berdasarkan trxId
-                    if (tabungan.trxId == 1) {
-                      transactionType = 'Saldo Awal';
-                    } else if (tabungan.trxId == 2) {
-                      transactionType = 'Simpanan';
-                    } else if (tabungan.trxId == 3) {
-                      transactionType = 'Penarikan';
-                    } else if (tabungan.trxId == 4) {
-                      transactionType = 'Bunga Simpanan';
-                    } else if (tabungan.trxId == 5) {
-                      transactionType = 'Koreksi Penambahan';
-                    } else if (tabungan.trxId == 6) {
-                      transactionType = 'Koreksi Pengurangan';
-                    } else {
-                      transactionType = 'null'; // Fallback jika trxName null
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 5, // Mengurangi jarak vertikal antara tile
-                        horizontal: 24, // Padding horizontal tetap
+                          // Tentukan jenis transaksi berdasarkan trxId
+                          if (tabungan.trxId == 1) {
+                            transactionType = 'Saldo Awal';
+                          } else if (tabungan.trxId == 2) {
+                            transactionType = 'Simpanan';
+                          } else if (tabungan.trxId == 3) {
+                            transactionType = 'Penarikan';
+                          } else if (tabungan.trxId == 4) {
+                            transactionType = 'Bunga Simpanan';
+                          } else if (tabungan.trxId == 5) {
+                            transactionType = 'Koreksi Penambahan';
+                          } else if (tabungan.trxId == 6) {
+                            transactionType = 'Koreksi Pengurangan';
+                          } else {
+                            transactionType =
+                                'null'; // Fallback jika trxName null
+                          }
+                          // Filter tabungan berdasarkan kata kunci pencarian
+                          if (_searchKeyword.isEmpty ||
+                              (tabungan.trxNominal
+                                      .toString()
+                                      .contains(_searchKeyword) ||
+                                  transactionType
+                                      .toLowerCase()
+                                      .contains(_searchKeyword))) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical:
+                                    5, // Mengurangi jarak vertikal antara tile
+                                horizontal: 24, // Padding horizontal tetap
+                              ),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                elevation: 5,
+                                child: ListTile(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  tileColor: Color.fromARGB(255, 241, 238, 247),
+                                  title: Text(
+                                    '${transactionType}',
+                                    style: blackTextStyle.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Text(
+                                    'Jumlah: Rp${NumberFormat("#,##0", "id_ID").format(tabungan.trxNominal)}',
+                                    style: blackTextStyle.copyWith(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return SizedBox
+                                .shrink(); // Jika tidak cocok, kembalikan widget kosong
+                          }
+                        },
                       ),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        elevation: 5,
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          tileColor: Color.fromARGB(255, 241, 238, 247),
-                          title: Text(
-                            '${transactionType}',
-                            style: blackTextStyle.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            'Jumlah: Rp${NumberFormat("#,##0", "id_ID").format(tabungan.trxNominal)}',
-                            style: blackTextStyle.copyWith(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+          ),
+        ],
+      ),
     );
   }
 }

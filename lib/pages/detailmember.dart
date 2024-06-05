@@ -15,6 +15,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
   Member? _member;
   int saldo = 0;
+  bool _isMemberActive = false;
 
   @override
   void initState() {
@@ -36,6 +37,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
         final memberData = responseData['data']['anggota'];
         setState(() {
           _member = Member.fromJson(memberData);
+          _isMemberActive = _member!.statusAktif == 1;
         });
         print(_response.data);
       } else {
@@ -183,17 +185,19 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                       SizedBox(width: 10),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              '/addtabungan',
-                              arguments: {
-                                'id': _member!.id,
-                                'nomor_induk': _member!.nomorInduk,
-                                'nama': _member!.name,
-                              },
-                            );
-                          },
+                          onPressed: _isMemberActive
+                              ? () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/addtabungan',
+                                    arguments: {
+                                      'id': _member!.id,
+                                      'nomor_induk': _member!.nomorInduk,
+                                      'nama': _member!.name,
+                                    },
+                                  );
+                                }
+                              : null,
                           child: Text(
                             'Add Transaksi',
                             style: whiteTextStyle.copyWith(
@@ -203,7 +207,8 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                           ),
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 15),
-                            backgroundColor: secondaryColor,
+                            backgroundColor:
+                                _isMemberActive ? secondaryColor : Colors.grey,
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
@@ -293,37 +298,60 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
   }
 
   Widget buildSaldoCard(String label, String value) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.symmetric(vertical: 3),
-      decoration: BoxDecoration(
-        color: Colors.blue[100],
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 2,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.account_balance_wallet,
-            color: Colors.blue,
-          ),
-          SizedBox(width: 8),
-          Text(
-            '$label: $value',
-            style: blackTextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.blue[800],
+    return GestureDetector(
+      onTap: () {
+        if (_isMemberActive) {
+          Navigator.pushNamed(
+            context,
+            '/addbunga',
+            arguments: _isMemberActive,
+          );
+        } else {
+          // Tampilkan pesan bahwa member tidak aktif
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Member is not active. Cannot add bunga.',
+                textAlign: TextAlign.center,
+              ),
+              duration: Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
             ),
-          ),
-        ],
+          );
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(16),
+        margin: EdgeInsets.symmetric(vertical: 3),
+        decoration: BoxDecoration(
+          color: Colors.blue[100],
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.account_balance_wallet,
+              color: Colors.blue,
+            ),
+            SizedBox(width: 8),
+            Text(
+              '$label: $value',
+              style: blackTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue[800],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

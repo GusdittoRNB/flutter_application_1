@@ -84,7 +84,6 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
       _showErrorDialog('Token is expired. Please login again.');
-      Navigator.pushReplacementNamed(context, '/');
     }
   }
 
