@@ -25,10 +25,10 @@ Berikut adalah tampilannya
 
 <img width="345" alt="Screenshot 2024-05-27 at 10 13 54" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/50a3b86b-e316-4558-b717-6513e306a03e">
 
-<img width="327" alt="Screenshot 2024-06-09 at 23 14 23" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/3a301dde-f5a4-4cc7-91d6-07045ea78d36">
+<img width="345" alt="Screenshot 2024-06-09 at 23 14 23" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/3a301dde-f5a4-4cc7-91d6-07045ea78d36">
 
 <img width="345" alt="Screenshot 2024-05-27 at 10 15 07" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/c9a07522-990f-4a67-8905-f2d1ae9d1ee5">
 
-<img width="327" alt="image" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/ad8da739-7912-4de2-be56-26fddf87a982">
+<img width="345" alt="image" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/ad8da739-7912-4de2-be56-26fddf87a982">
 
-<img width="327" alt="Screenshot 2024-06-09 at 23 14 46" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/49ec3060-4873-4106-ac2d-4c7f4dcf4227">
+<img width="345" alt="Screenshot 2024-06-09 at 23 14 46" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/49ec3060-4873-4106-ac2d-4c7f4dcf4227">
