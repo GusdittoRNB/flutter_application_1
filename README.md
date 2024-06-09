@@ -19,18 +19,16 @@ Berikut adalah tampilannya
 
 <img width="345" alt="Screenshot 2024-05-27 at 10 13 19" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/aced9fac-a249-4c08-8283-2a958e170d64">
 
-
-
 <img width="345" alt="Screenshot 2024-05-27 at 10 13 36" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/91c3d9e3-4e9d-4f45-b8b5-257f867da369">
 
 <img width="345" alt="Screenshot 2024-05-27 at 10 13 46" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/df733735-211c-442f-8036-a9fed9f3aa0f">
 
 <img width="345" alt="Screenshot 2024-05-27 at 10 13 54" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/50a3b86b-e316-4558-b717-6513e306a03e">
 
-<img width="345" alt="Screenshot 2024-05-27 at 10 14 10" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/9aa59e7d-51aa-462f-8b7c-903fc92116da">
+<img width="327" alt="Screenshot 2024-06-09 at 23 14 23" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/3a301dde-f5a4-4cc7-91d6-07045ea78d36">
 
 <img width="345" alt="Screenshot 2024-05-27 at 10 15 07" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/c9a07522-990f-4a67-8905-f2d1ae9d1ee5">
 
-<img width="345" alt="Screenshot 2024-05-27 at 10 15 38" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/988d34ca-15a5-4e32-ba3d-c1b945bde6e9">
+<img width="327" alt="image" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/ad8da739-7912-4de2-be56-26fddf87a982">
 
-<img width="345" alt="Screenshot 2024-05-27 at 10 15 46" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/e34afc39-3b7f-4e36-bd2f-d90595ddaad9">
+<img width="327" alt="Screenshot 2024-06-09 at 23 14 46" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/49ec3060-4873-4106-ac2d-4c7f4dcf4227">
