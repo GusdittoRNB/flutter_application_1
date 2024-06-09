@@ -162,7 +162,7 @@ class _AddBungaPageState extends State<AddBungaPage> {
                         });
                       },
                     ),
-                    Text('Tidak Aktif'),
+                    Text('Non-Aktif'),
                   ],
                 ),
               ],

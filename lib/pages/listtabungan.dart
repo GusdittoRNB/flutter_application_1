@@ -92,7 +92,7 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'History Tabungan',
+          'History Transaction',
           style: blackTextStyle.copyWith(
             fontSize: 20,
           ),
