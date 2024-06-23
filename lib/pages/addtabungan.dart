@@ -169,7 +169,7 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
       appBar: AppBar(
         title: Text(
           'Add Transaction',
-          style: TextStyle(
+          style: blackTextStyle.copyWith(
             fontSize: 20,
           ),
         ),
@@ -187,30 +187,6 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'ID Anggota',
-                    filled: true,
-                    fillColor: fieldColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: secondaryColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    labelStyle: blackTextStyle.copyWith(fontSize: 15),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            GestureDetector(
-              onTap: () {},
-              child: AbsorbPointer(
-                child: TextField(
-                  controller: nomorIndukController,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    labelText: 'Nomor Induk',
                     filled: true,
                     fillColor: fieldColor,
                     enabledBorder: OutlineInputBorder(

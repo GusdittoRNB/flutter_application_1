@@ -18,10 +18,10 @@ class _AddBungaPageState extends State<AddBungaPage> {
   @override
   void initState() {
     super.initState();
-    getSaldoMember();
+    getBunga();
   }
 
-  Future<void> getSaldoMember() async {
+  Future<void> getBunga() async {
     try {
       final _response = await _dio.get(
         '$_apiUrl/settingbunga',
@@ -61,7 +61,7 @@ class _AddBungaPageState extends State<AddBungaPage> {
           builder: (context) {
             return AlertDialog(
               title: Text('Success'),
-              content: Text('Transaksi berhasil dilakukan'),
+              content: Text('Add bunga berhasil dilakukan'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -79,11 +79,10 @@ class _AddBungaPageState extends State<AddBungaPage> {
       }
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
-      Navigator.pushReplacementNamed(context, '/');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Something went wrong. Please try again',
+            'Add failed. Please check your data.',
             textAlign: TextAlign.center,
           ),
           duration: Duration(seconds: 3),
@@ -121,7 +120,7 @@ class _AddBungaPageState extends State<AddBungaPage> {
       appBar: AppBar(
         title: Text(
           'Add Bunga',
-          style: TextStyle(
+          style: blackTextStyle.copyWith(
             fontSize: 20,
           ),
         ),
@@ -131,13 +130,32 @@ class _AddBungaPageState extends State<AddBungaPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            TextField(
+              controller: bungaController,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              decoration: InputDecoration(
+                labelText: 'Persentase Bunga (Contoh: 1.1)',
+                filled: true,
+                fillColor: fieldColor,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: secondaryColor),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                labelStyle: blackTextStyle.copyWith(fontSize: 15),
+              ),
+            ),
+            SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Status Aktif',
-                  style: TextStyle(
-                    fontSize: 16,
+                  'Status Aktif:',
+                  style: blackTextStyle.copyWith(
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -167,25 +185,6 @@ class _AddBungaPageState extends State<AddBungaPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            TextField(
-              controller: bungaController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              decoration: InputDecoration(
-                labelText: 'Persentase Bunga',
-                filled: true,
-                fillColor: fieldColor,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: secondaryColor),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                labelStyle: blackTextStyle.copyWith(fontSize: 15),
-              ),
-            ),
             SizedBox(height: 50),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 60),
@@ -193,7 +192,8 @@ class _AddBungaPageState extends State<AddBungaPage> {
                 minWidth: double.infinity,
                 height: 60,
                 onPressed: () {
-                  if (bungaController.text.isNotEmpty && selectedAktif != null) {
+                  if (bungaController.text.isNotEmpty &&
+                      selectedAktif != null) {
                     addBunga();
                   } else {
                     _showErrorDialog(

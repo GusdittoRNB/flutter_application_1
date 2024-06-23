@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                     style: blackTextStyle,
                   ),
                   onTap: () {
-                    // Navigator.pushNamed(context, '/jenistransaksi');
+                    // Navigator.pushNamed(context, '/');
                   },
                 ),
                 ListTile(

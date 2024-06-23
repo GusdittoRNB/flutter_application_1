@@ -14,11 +14,14 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
   late int memberId = 0;
 
   List<Tabungan> tabunganList = [];
+  List<Tabungan> filteredTabunganList = [];
   bool isLoading = false;
 
   String transactionType = '';
-
   String _searchKeyword = '';
+
+  int currentPage = 1;
+  int itemsPerPage = 5;
 
   @override
   void didChangeDependencies() {
@@ -52,14 +55,14 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
         }
         setState(() {
           tabunganList = tempList;
+          filteredTabunganList = tempList;
         });
       } else {
-        // Respons gagal
-        print('Failed to load saldo: ${response.statusCode}');
+        print('Failed to load tabungan: ${response.statusCode}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Failed to load saldo',
+              'Failed to load tabungan',
               textAlign: TextAlign.center,
             ),
             duration: Duration(seconds: 3),
@@ -67,7 +70,7 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
           ),
         );
       }
-    } on DioException catch (e) {
+    } on DioError catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
       Navigator.pushReplacementNamed(context, '/');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -87,8 +90,29 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
     }
   }
 
+  List<Tabungan> getPaginatedData() {
+    int startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredTabunganList.skip(startIndex).take(itemsPerPage).toList();
+  }
+
+  void filterTabunganList(String keyword) {
+    setState(() {
+      _searchKeyword = keyword.toLowerCase();
+      filteredTabunganList = tabunganList.where((tabungan) {
+        return tabungan.trxNominal.toString().contains(_searchKeyword) ||
+            getTransactionType(tabungan.trxId)
+                .toLowerCase()
+                .contains(_searchKeyword);
+      }).toList();
+      currentPage = 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<Tabungan> paginatedData = getPaginatedData();
+    int totalPages = (filteredTabunganList.length / itemsPerPage).ceil();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -99,6 +123,7 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
         ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: defaultMargin),
@@ -108,11 +133,9 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
                 prefixIcon: Icon(Icons.search),
               ),
               onChanged: (value) {
-                setState(() {
-                  _searchKeyword = value.toLowerCase();
-                });
+                filterTabunganList(value);
               },
-              style: blackTextStyle.copyWith(
+              style: TextStyle(
                 fontSize: 15,
               ),
             ),
@@ -123,77 +146,164 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
                 ? Center(child: CircularProgressIndicator())
                 : tabunganList.isEmpty
                     ? Center(child: Text('Belum Memiliki Tabungan'))
-                    : ListView.builder(
-                        itemCount: tabunganList.length,
-                        itemBuilder: (context, index) {
-                          final tabungan = tabunganList[index];
-
-                          // Tentukan jenis transaksi berdasarkan trxId
-                          if (tabungan.trxId == 1) {
-                            transactionType = 'Saldo Awal';
-                          } else if (tabungan.trxId == 2) {
-                            transactionType = 'Simpanan';
-                          } else if (tabungan.trxId == 3) {
-                            transactionType = 'Penarikan';
-                          } else if (tabungan.trxId == 4) {
-                            transactionType = 'Bunga Simpanan';
-                          } else if (tabungan.trxId == 5) {
-                            transactionType = 'Koreksi Penambahan';
-                          } else if (tabungan.trxId == 6) {
-                            transactionType = 'Koreksi Pengurangan';
-                          } else {
-                            transactionType =
-                                'null'; // Fallback jika trxName null
-                          }
-                          // Filter tabungan berdasarkan kata kunci pencarian
-                          if (_searchKeyword.isEmpty ||
-                              (tabungan.trxNominal
-                                      .toString()
-                                      .contains(_searchKeyword) ||
-                                  transactionType
-                                      .toLowerCase()
-                                      .contains(_searchKeyword))) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical:
-                                    5, // Mengurangi jarak vertikal antara tile
-                                horizontal: 24, // Padding horizontal tetap
-                              ),
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                elevation: 5,
-                                child: ListTile(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  tileColor: Color.fromARGB(255, 241, 238, 247),
-                                  title: Text(
-                                    '${transactionType}',
-                                    style: blackTextStyle.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: Text(
-                                    'Jumlah: Rp${NumberFormat("#,##0", "id_ID").format(tabungan.trxNominal)}',
-                                    style: blackTextStyle.copyWith(
-                                      fontSize: 16,
+                    : Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: defaultMargin),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: DataTable(
+                              columnSpacing: 0.0,
+                              headingRowColor: MaterialStateColor.resolveWith(
+                                  (states) =>
+                                      secondaryColor), // Warna latar belakang header kolom
+                              dataRowColor: MaterialStateColor.resolveWith(
+                                  (states) => Color.fromARGB(255, 236, 234,
+                                      255)), // Warna latar belakang sel data
+                              columns: [
+                                DataColumn(
+                                  label: Container(
+                                    width: 70,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Tanggal',
+                                      style: whiteTextStyle.copyWith(
+                                        fontSize: 13,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          } else {
-                            return SizedBox
-                                .shrink(); // Jika tidak cocok, kembalikan widget kosong
-                          }
-                        },
+                                DataColumn(
+                                  label: Container(
+                                    width: 110,
+                                    alignment: Alignment.centerLeft,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Jenis',
+                                          style: whiteTextStyle.copyWith(
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Transaksi',
+                                          style: whiteTextStyle.copyWith(
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Container(
+                                    width: 70,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Nominal',
+                                      style: whiteTextStyle.copyWith(
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              rows: paginatedData
+                                  .map(
+                                    (tabungan) => DataRow(cells: [
+                                      DataCell(
+                                        Container(
+                                          width: 120,
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                              tabungan.trxTanggal ?? 'N/A'),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Container(
+                                          width: 100,
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(getTransactionType(
+                                              tabungan.trxId)),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Container(
+                                          width: 120,
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Rp${NumberFormat("#,##0", "id_ID").format(tabungan.trxNominal)}',
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        ),
                       ),
+          ),
+          if (filteredTabunganList.length > itemsPerPage)
+            _buildPaginationControls(totalPages),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPaginationControls(int totalPages) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          vertical: 20.0), // Adjust the padding as needed
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: currentPage > 1
+                ? () {
+                    setState(() {
+                      currentPage--;
+                    });
+                  }
+                : null,
+          ),
+          Text('Page $currentPage of $totalPages'),
+          IconButton(
+            icon: Icon(Icons.arrow_forward),
+            onPressed: currentPage < totalPages
+                ? () {
+                    setState(() {
+                      currentPage++;
+                    });
+                  }
+                : null,
           ),
         ],
       ),
     );
+  }
+
+  String getTransactionType(int? trxId) {
+    switch (trxId) {
+      case 1:
+        return 'Saldo Awal';
+      case 2:
+        return 'Simpanan';
+      case 3:
+        return 'Penarikan';
+      case 4:
+        return 'Bunga Simpanan';
+      case 5:
+        return 'Koreksi Penambahan';
+      case 6:
+        return 'Koreksi Pengurangan';
+      default:
+        return 'null';
+    }
   }
 }
 
@@ -201,23 +311,27 @@ class Tabungan {
   int? trxId;
   int? anggotaId;
   int? trxNominal;
+  String? trxTanggal;
 
   Tabungan({
     this.trxId,
     this.anggotaId,
     this.trxNominal,
+    this.trxTanggal,
   });
 
   Tabungan.fromJson(Map<String, dynamic> json)
       : trxId = json['trx_id'],
         anggotaId = json['anggota_id'],
-        trxNominal = json['trx_nominal'];
+        trxNominal = json['trx_nominal'],
+        trxTanggal = json['trx_tanggal'];
 
   Map<String, dynamic> toJson() {
     return {
       'trx_id': trxId,
       'anggota_id': anggotaId,
       'trx_nominal': trxNominal,
+      'trx_tanggal': trxTanggal,
     };
   }
 }
