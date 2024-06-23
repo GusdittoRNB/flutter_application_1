@@ -27,8 +27,9 @@ Berikut adalah tampilannya
 
 <img width="345" alt="Screenshot 2024-06-09 at 23 14 23" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/3a301dde-f5a4-4cc7-91d6-07045ea78d36">
 
-<img width="345" alt="Screenshot 2024-05-27 at 10 15 07" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/c9a07522-990f-4a67-8905-f2d1ae9d1ee5">
+<img width="345" alt="Screenshot 2024-06-24 at 03 38 27" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/761de3ce-4fc9-46b9-ba38-a0c462c1f2fd">
 
-<img width="345" alt="image" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/ad8da739-7912-4de2-be56-26fddf87a982">
+<img width="345" alt="Screenshot 2024-06-24 at 03 37 51" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/2bb36add-32ee-4aa9-8982-d0dbd30b956f">
 
-<img width="345" alt="Screenshot 2024-06-09 at 23 14 46" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/49ec3060-4873-4106-ac2d-4c7f4dcf4227">
+<img width="345" alt="Screenshot 2024-06-24 at 03 38 37" src="https://github.com/GusdittoRNB/flutter_application_1/assets/114908038/998e2bef-7657-4c1c-8e7e-bfdafad0dd2a">
+
