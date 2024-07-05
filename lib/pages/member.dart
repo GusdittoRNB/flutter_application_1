@@ -189,7 +189,7 @@ class _MemberPageState extends State<MemberPage> {
                 final member = _members[index];
                 if (_searchKeyword.isEmpty ||
                     member.name.toLowerCase().contains(_searchKeyword) ||
-                    member.alamat.toLowerCase().contains(_searchKeyword)) {
+                    member.alamat.toLowerCase().contains(_searchKeyword) || member.nomorInduk.toString().contains(_searchKeyword)) {
                   return Padding(
                     padding: EdgeInsets.symmetric(
                         vertical: 5), // Tambahkan padding di sini
@@ -200,9 +200,20 @@ class _MemberPageState extends State<MemberPage> {
                           style: blackTextStyle.copyWith(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        subtitle: Text(
-                          '${member.alamat}',
-                          style: blackTextStyle.copyWith(fontSize: 14),
+                        subtitle: Column(
+                          // '${member.alamat}',
+                          // style: blackTextStyle.copyWith(fontSize: 14),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${member.alamat}',
+                              style: blackTextStyle.copyWith(fontSize: 14),
+                            ),
+                            Text(
+                              '${member.nomorInduk}',
+                              style: blackTextStyle.copyWith(fontSize: 14),
+                            ),
+                          ],
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,

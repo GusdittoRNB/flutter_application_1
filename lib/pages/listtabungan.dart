@@ -23,6 +23,8 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
   int currentPage = 1;
   int itemsPerPage = 5;
 
+  Member? _member;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -36,6 +38,7 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
   Future<void> getTabunganMember() async {
     setState(() {
       isLoading = true;
+      getMemberDetail();
     });
 
     try {
@@ -90,17 +93,62 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
     }
   }
 
+  Future<void> getMemberDetail() async {
+    try {
+      final _response = await _dio.get(
+        '$_apiUrl/anggota/${memberId}',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+      if (_response.statusCode == 200) {
+        final responseData = _response.data;
+        final memberData = responseData['data']['anggota'];
+        setState(() {
+          _member = Member.fromJson(memberData);
+        });
+        print(_response.data);
+      } else {
+        print('Failed to load member detail: ${_response.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Failed to load member detail',
+              textAlign: TextAlign.center,
+            ),
+            duration: Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      }
+    } on DioException catch (e) {
+      print('${e.response} - ${e.response?.statusCode}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Failed to load member detail',
+            textAlign: TextAlign.center,
+          ),
+          duration: Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    }
+  }
+
   List<Tabungan> getPaginatedData() {
-  // Urutkan filteredTabunganList berdasarkan trxTanggal dari terbaru ke terlama
-  filteredTabunganList.sort((a, b) => DateTime.parse(b.trxTanggal!).compareTo(DateTime.parse(a.trxTanggal!)));
+    // Urutkan filteredTabunganList berdasarkan trxTanggal dari terbaru ke terlama
+    filteredTabunganList.sort((a, b) =>
+        DateTime.parse(b.trxTanggal!).compareTo(DateTime.parse(a.trxTanggal!)));
 
-  // Hitung indeks awal berdasarkan halaman saat ini dan items per halaman
-  int startIndex = (currentPage - 1) * itemsPerPage;
+    // Hitung indeks awal berdasarkan halaman saat ini dan items per halaman
+    int startIndex = (currentPage - 1) * itemsPerPage;
 
-  // Ambil sejumlah itemsPerPage data terbaru dari startIndex
-  return filteredTabunganList.skip(startIndex).take(itemsPerPage).toList();
-}
-
+    // Ambil sejumlah itemsPerPage data terbaru dari startIndex
+    return filteredTabunganList.skip(startIndex).take(itemsPerPage).toList();
+  }
 
   void filterTabunganList(String keyword) {
     setState(() {
@@ -147,6 +195,27 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
               ),
             ),
           ),
+          SizedBox(height: 20),
+          if (_member != null)
+            Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: defaultMargin, vertical: 10),
+              child: Text(
+                _member!.name,
+                style: blackTextStyle.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Colors.black26,
+                      offset: Offset(2.0, 2.0),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           SizedBox(height: 20),
           Expanded(
             child: isLoading
