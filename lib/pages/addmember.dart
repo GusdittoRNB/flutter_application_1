@@ -223,10 +223,10 @@ class _AddMemberPageState extends State<AddMemberPage> {
       );
       print(_response.data);
       _storage.write('data', _response.data['data']);
-      nomorIndukController.clear();
-      namaController.clear();
-      alamatController.clear();
-      teleponController.clear();
+      // nomorIndukController.clear();
+      // namaController.clear();
+      // alamatController.clear();
+      // teleponController.clear();
       Navigator.pushNamed(context, '/member');
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');

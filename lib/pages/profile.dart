@@ -26,6 +26,13 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/home', (route) => false);
+          },
+        ),
       ),
       body: _isLoading
           ? Center(
@@ -169,5 +176,4 @@ class _ProfilePageState extends State<ProfilePage> {
       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     }
   }
-  
 }

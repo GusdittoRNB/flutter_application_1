@@ -91,9 +91,16 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
   }
 
   List<Tabungan> getPaginatedData() {
-    int startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredTabunganList.skip(startIndex).take(itemsPerPage).toList();
-  }
+  // Urutkan filteredTabunganList berdasarkan trxTanggal dari terbaru ke terlama
+  filteredTabunganList.sort((a, b) => DateTime.parse(b.trxTanggal!).compareTo(DateTime.parse(a.trxTanggal!)));
+
+  // Hitung indeks awal berdasarkan halaman saat ini dan items per halaman
+  int startIndex = (currentPage - 1) * itemsPerPage;
+
+  // Ambil sejumlah itemsPerPage data terbaru dari startIndex
+  return filteredTabunganList.skip(startIndex).take(itemsPerPage).toList();
+}
+
 
   void filterTabunganList(String keyword) {
     setState(() {
@@ -183,7 +190,7 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Jenis',
+                                          '   Jenis',
                                           style: whiteTextStyle.copyWith(
                                             fontSize: 13,
                                           ),

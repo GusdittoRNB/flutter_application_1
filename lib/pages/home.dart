@@ -61,13 +61,13 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.wallet),
+                  leading: Icon(Icons.percent),
                   title: Text(
-                    'Wallet',
+                    'Interest',
                     style: blackTextStyle,
                   ),
                   onTap: () {
-                    // Navigator.pushNamed(context, '/');
+                    Navigator.pushNamed(context, '/addbunga');
                   },
                 ),
                 ListTile(
@@ -112,8 +112,11 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _selectedIndex = index; // Ubah _selectedIndex saat item diklik
             if (index == 1) {
+              Navigator.pushNamed(
+                  context, '/member'); // Menuju halaman member untuk transaksi
+            } else if (index == 3) {
               Navigator.pushNamed(context,
-                  '/member'); // Menuju halaman member untuk transaksi
+                  '/addbunga'); // Menuju halaman profil jika item 'Me' ditekan
             } else if (index == 4) {
               Navigator.pushNamed(context,
                   '/profile'); // Menuju halaman profil jika item 'Me' ditekan
@@ -145,8 +148,8 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           BottomNavigationBarItem(
-            label: 'Wallet',
-            icon: Icon(Icons.wallet),
+            label: 'Interest',
+            icon: Icon(Icons.percent),
           ),
           BottomNavigationBarItem(
             label: 'Me',

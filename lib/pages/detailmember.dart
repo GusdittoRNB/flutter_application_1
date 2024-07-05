@@ -298,60 +298,58 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
   }
 
   Widget buildSaldoCard(String label, String value) {
-    return GestureDetector(
-      onTap: () {
-        if (_isMemberActive) {
-          Navigator.pushNamed(
-            context,
-            '/addbunga',
-            arguments: _isMemberActive,
-          );
-        } else {
-          // Tampilkan pesan bahwa member tidak aktif
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Member is not active. Cannot add bunga.',
-                textAlign: TextAlign.center,
-              ),
-              duration: Duration(seconds: 3),
-              behavior: SnackBarBehavior.floating,
+    return Container(
+      // onTap: () {
+      //   if (_isMemberActive) {
+      //     Navigator.pushNamed(
+      //       context,
+      //       '/addbunga',
+      //       arguments: _isMemberActive,
+      //     );
+      //   } else {
+      //     // Tampilkan pesan bahwa member tidak aktif
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       SnackBar(
+      //         content: Text(
+      //           'Member is not active. Cannot add bunga.',
+      //           textAlign: TextAlign.center,
+      //         ),
+      //         duration: Duration(seconds: 3),
+      //         behavior: SnackBarBehavior.floating,
+      //       ),
+      //     );
+      //   }
+      // },
+      padding: EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(vertical: 3),
+      decoration: BoxDecoration(
+        color: Colors.blue[100],
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.account_balance_wallet,
+            color: Colors.blue,
+          ),
+          SizedBox(width: 8),
+          Text(
+            '$label: $value',
+            style: blackTextStyle.copyWith(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue[800],
             ),
-          );
-        }
-      },
-      child: Container(
-        padding: EdgeInsets.all(16),
-        margin: EdgeInsets.symmetric(vertical: 3),
-        decoration: BoxDecoration(
-          color: Colors.blue[100],
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 2,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Icon(
-              Icons.account_balance_wallet,
-              color: Colors.blue,
-            ),
-            SizedBox(width: 8),
-            Text(
-              '$label: $value',
-              style: blackTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue[800],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

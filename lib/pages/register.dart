@@ -243,10 +243,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
       );
       print(_response.data);
       _storage.write('data', _response.data['data']);
-      nameController.clear();
-      emailController.clear();
-      passwordController.clear();
-      confirmPasswordController.clear();
+      // nameController.clear();
+      // emailController.clear();
+      // passwordController.clear();
+      // confirmPasswordController.clear();
       Navigator.pushNamed(context, '/login');
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');

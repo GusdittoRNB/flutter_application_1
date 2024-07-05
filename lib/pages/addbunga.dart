@@ -10,6 +10,8 @@ class AddBungaPage extends StatefulWidget {
 class _AddBungaPageState extends State<AddBungaPage> {
   final TextEditingController bungaController = TextEditingController();
   int? selectedAktif;
+  List<dynamic> activeBunga = [];
+  // List<dynamic> settingBungas = [];
 
   final _dio = Dio();
   final _storage = GetStorage();
@@ -30,16 +32,30 @@ class _AddBungaPageState extends State<AddBungaPage> {
         ),
       );
       if (_response.statusCode == 200) {
+        setState(() {
+          activeBunga = [_response.data['data']['activebunga']];
+          // settingBungas = _response.data['data']['settingbungas'];
+        });
         print(_response.data);
       } else {
         print('Failed to load saldo: ${_response.statusCode}');
       }
     } on DioException catch (e) {
       print('${e.response} - ${e.response?.statusCode}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Token is Expired. Please Login Again.',
+            textAlign: TextAlign.center,
+          ),
+          duration: Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     }
   }
 
-  // Function to add bunga
   Future<void> addBunga() async {
     final persentaseBunga = bungaController.text;
 
@@ -92,7 +108,6 @@ class _AddBungaPageState extends State<AddBungaPage> {
     }
   }
 
-  // Function to show error dialog
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -123,6 +138,13 @@ class _AddBungaPageState extends State<AddBungaPage> {
           style: blackTextStyle.copyWith(
             fontSize: 20,
           ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/home', (route) => false);
+          },
         ),
       ),
       body: SingleChildScrollView(
@@ -213,6 +235,34 @@ class _AddBungaPageState extends State<AddBungaPage> {
                   ),
                 ),
               ),
+            ),
+            SizedBox(height: 80),
+            Center(
+              child: Text(
+                'Active Bunga:',
+                style: blackTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Center(
+              child: activeBunga.isNotEmpty
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: activeBunga.map((bunga) {
+                        return Text(
+                          '${bunga['persen']}%',
+                          style: blackTextStyle.copyWith(
+                            fontSize: 16,
+                          ),
+                        );
+                      }).toList(),
+                    )
+                  : Text(
+                      'No active bunga found',
+                      style: blackTextStyle,
+                    ),
             ),
           ],
         ),
